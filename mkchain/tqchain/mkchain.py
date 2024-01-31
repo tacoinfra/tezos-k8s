@@ -65,7 +65,7 @@ cli_args = {
     },
     "octez_docker_image": {
         "help": "Version of the Octez docker image",
-        "default": "tezos/tezos:v17.1",
+        "default": "tezos/tezos:v19.0",
     },
     "use_docker": {
         "action": "store_true",
@@ -219,9 +219,9 @@ def main():
             for key_type in keys:
                 accounts[key_type][account] = {
                     "key": keys[key_type],
-                    "is_bootstrap_baker_account": False
-                    if account == "authorized-key-0"
-                    else True,
+                    "is_bootstrap_baker_account": (
+                        False if account == "authorized-key-0" else True
+                    ),
                     "bootstrap_balance": "4000000000000",
                 }
 

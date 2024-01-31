@@ -19,7 +19,7 @@ config:
     # Default value assumes node RPC is available on localhost.
     rpcUrl: http://localhost:8732
     faucetAddress: "" # tz1PW...
-    viewer: "" # https://network.tzstats.com
+    viewer: "" # https://network.tzstats.com - do not leave empty otherwise frontend will crash on start
 
 # Value the server sets for the "Access-Control-Allow-Origin" header for CORS.
 authorizedHost: "*"
