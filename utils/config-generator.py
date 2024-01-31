@@ -237,10 +237,6 @@ def expose_secret_key(account_name):
 
     if MY_POD_TYPE == "rollup":
         return account_name == MY_POD_CONFIG.get("operator_account")
-    if MY_POD_TYPE == "slot-injector":
-        # deploy secret key for injector account
-        return account_name == os.environ["INJECTOR_ACCOUNT"]
-
     if MY_POD_TYPE in ["node", "baker"]:
         if account_name in MY_POD_CONFIG.get("authorized_keys", {}):
             return True
