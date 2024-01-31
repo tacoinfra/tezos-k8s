@@ -1,6 +1,6 @@
 # Images not part of the tezos-k8s repo go here
 images:
-  octez: tezos/tezos:v17.3
+  octez: tezos/tezos:v19.0
   tacoinfraRemoteSigner: ghcr.io/tacoinfra/tacoinfra-remote-signer:0.1.0
 # Images that are part of the tezos-k8s repo go here with 'dev' tag
 tezos_k8s_images:
