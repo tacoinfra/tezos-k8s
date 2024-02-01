@@ -297,7 +297,7 @@ def main():
 
     protocol_constants = {
         "tezos_k8s_images": {
-            "utils": "ghcr.io/oxheadalpha/tezos-k8s-utils:bake_remotely"
+            "utils": "ghcr.io/tacoinfra/tezos-k8s-utils:bake_remotely"
         },
         "expected_proof_of_work": args.expected_proof_of_work,
         **base_constants,

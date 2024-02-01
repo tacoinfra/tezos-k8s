@@ -70,7 +70,6 @@ def main():
     all_accounts = ACCOUNTS
 
     all_accounts = import_keys(all_accounts)
-    import_keys(all_accounts)
     if "genesis" in NETWORK_CONFIG:
         fill_in_missing_genesis_block()
 
@@ -310,6 +309,8 @@ def get_secret_key(account, key: Key):
             # Use signer for this account even if there's a sk
             sk = signer_url
             print(f"    Using remote signer url: {sk}")
+        else:
+            print("    Loading secret key into pod")
 
     return sk
 
@@ -362,7 +363,6 @@ def import_keys(all_accounts):
             print(f"    Appending authorized key: {pk_b58}")
             authorized_keys.append({"name": account_name, "value": pk_b58})
 
-        print(f"    Account key type: {account_values.get('type')}")
         print(
             f"    Account bootstrap balance: "
             + f"{account_values.get('bootstrap_balance')}"
