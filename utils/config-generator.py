@@ -548,6 +548,7 @@ def create_node_config_json(
         node_config["network"] = dict(NETWORK_CONFIG)
         # Delete props that are not part of the node config.json spec
         node_config["network"].pop("activation_account_name")
+        node_config["network"].pop("activation_account_authorized_key", None)
 
         node_config["network"]["sandboxed_chain_name"] = "SANDBOXED_TEZOS"
         node_config["network"]["default_bootstrap_peers"] = []

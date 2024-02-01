@@ -146,7 +146,7 @@ def main():
 
     base_constants = {
         "images": {
-            "octez": "tezos/tezos:master_36959547_20231205233933",
+            "octez": args.octez_docker_image,
         },
         "node_config_network": {"chain_name": args.chain_name},
         # Custom chains should not pull snapshots or tarballs
@@ -278,6 +278,7 @@ def main():
     }
 
     base_constants["node_config_network"]["activation_account_name"] = f"{BAKER_NAME}-a"
+    base_constants["node_config_network"]["activation_account_authorized_key"] = "authorized-key-0"
 
     with open(
         f"{os.path.dirname(os.path.realpath(__file__))}/parameters.yaml", "r"
