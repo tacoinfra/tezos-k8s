@@ -228,9 +228,10 @@ def expose_secret_key(account_name):
     as is the case in Octez client's "secret_keys" file.
     """
     if MY_POD_TYPE == "activating":
-        if "activation_account_authorized_key" in NETWORK_CONFIG:
-            return account_name == NETWORK_CONFIG["activation_account_authorized_key"]
-        return account_name == NETWORK_CONFIG["activation_account_name"]
+        return account_name in [
+            NETWORK_CONFIG.get("activation_account_authorized_key"),
+            NETWORK_CONFIG.get("activation_account_name"),
+        ]
 
     if MY_POD_TYPE == "signing":
         return account_name in MY_POD_CONFIG.get("accounts")
@@ -308,9 +309,9 @@ def get_secret_key(account, key: Key):
         elif signer_url:
             # Use signer for this account even if there's a sk
             sk = signer_url
-            print(f"    Using remote signer url: {sk}")
+            print(f"    Appending remote signer url as secret key: {sk}")
         else:
-            print("    Loading secret key into pod")
+            print("    Appending secret key")
 
     return sk
 
@@ -339,7 +340,6 @@ def import_keys(all_accounts):
             sk = get_secret_key((account_name, account_values), key)
             if not sk:
                 raise Exception("Secret key required but not provided.")
-            print("    Appending secret key")
             secret_keys.append({"name": account_name, "value": sk})
 
         pk_b58 = key.public_key()
