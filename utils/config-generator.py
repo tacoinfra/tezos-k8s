@@ -161,7 +161,9 @@ def main():
 
             with open("/var/tezos/dal_attester_config", "w") as attester_file:
                 print(attester_list, file=attester_file)
-            print("Generated dal attester account list for this node: %s" % attester_list)
+            print(
+                "Generated dal attester account list for this node: %s" % attester_list
+            )
 
 
 # If NETWORK_CONFIG["genesis"]["block"] hasn't been specified, we generate a
@@ -215,7 +217,6 @@ def verify_this_bakers_account(accounts):
 #
 # import_keys() also fills in "pk" and "pkh" as the public key and
 # public key hash as a side-effect.  These are used later.
-
 
 
 def expose_secret_key(account_name):
