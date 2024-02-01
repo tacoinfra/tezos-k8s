@@ -1748,7 +1748,7 @@ spec:
               name: var-volume
       initContainers:
         - image: ghcr.io/tacoinfra/tezos-k8s-utils:main
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: config-generator
           args:
             - config-generator
