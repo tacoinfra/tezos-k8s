@@ -88,10 +88,11 @@
 {{- $node_vals_images := $.node_vals.images | default dict }}
 {{- if eq .image "octez" }}
   image: "{{ or $node_vals_images.octez $.Values.images.octez }}"
+  imagePullPolicy: {{ $.Values.images_pull_policy }}
 {{- else }}
   image: "{{ $.Values.tezos_k8s_images.utils }}"
+  imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
 {{- end }}
-  imagePullPolicy: IfNotPresent
 {{- if .run_script }}
   command:
     - /bin/sh
@@ -308,7 +309,7 @@
     {{- range .Values.protocols }}
 - name: accuser-{{ lower .command }}
   image: "{{ or $node_vals_images.octez $.Values.images.octez }}"
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: {{ $.Values.images_pull_policy }}
   command:
     - /usr/local/bin/tezos-accuser-{{ .command }}
   args:
@@ -323,7 +324,7 @@
     {{- range .Values.protocols }}
 - name: vdf-{{ lower .command }}
   image: "{{ or $node_vals_images.octez $.Values.images.octez }}"
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: {{ $.Values.images_pull_policy }}
   command:
     - /usr/local/bin/octez-baker-{{ .command }}
   args:
