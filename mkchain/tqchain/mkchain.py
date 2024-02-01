@@ -296,9 +296,6 @@ def main():
     bootstrap_peers = args.bootstrap_peers if args.bootstrap_peers else []
 
     protocol_constants = {
-        "tezos_k8s_images": {
-            "utils": "ghcr.io/tacoinfra/tezos-k8s-utils:bake_remotely"
-        },
         "expected_proof_of_work": args.expected_proof_of_work,
         **base_constants,
         "bootstrap_peers": bootstrap_peers,
