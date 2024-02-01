@@ -263,6 +263,7 @@ nodes:
 # Since octez 17.0, it is possible to bake with RPC only.
 # This is an alternative to defining bakers inside the node pods,
 # as above.
+# Experimental - do not use in production yet.
 bakers: {}
   # baker0:
   #   bake_using_accounts: [baker0]
