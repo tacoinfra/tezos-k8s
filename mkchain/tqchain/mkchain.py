@@ -33,9 +33,10 @@ sys.path.insert(0, "tqchain")
 
 __version__ = get_versions()["version"]
 
-L1_NODE_NAME = "l1-node"
+L1_NODE_NAME = "node"
 BAKER_NAME = "baker"
 DAL_NODE_NAME = "dal-node"
+SIGNER_NAME = "signer"
 
 cli_args = {
     "nodes": {
@@ -48,9 +49,14 @@ cli_args = {
         "default": 1,
         "type": int,
     },
+    "signers": {
+        "help": "number of remote signers in the cluster",
+        "default": 1,
+        "type": int,
+    },
     "dal_nodes": {
         "help": "number of DAL nodes in the cluster",
-        "default": 1,
+        "default": 0,
         "type": int,
     },
     "expected_proof_of_work": {
@@ -213,16 +219,23 @@ def main():
         baking_accounts = {
             f"{BAKER_NAME}-{char}": {} for char in string.ascii_lowercase[: args.bakers]
         }
-        for account in [*baking_accounts, "authorized-key-0"]:
+        for account in baking_accounts:
             print(f"Generating keys for account {account}")
             keys = gen_key(args.octez_docker_image)
             for key_type in keys:
                 accounts[key_type][account] = {
                     "key": keys[key_type],
-                    "is_bootstrap_baker_account": (
-                        False if account == "authorized-key-0" else True
-                    ),
+                    "is_bootstrap_baker_account": True,
                     "bootstrap_balance": "4000000000000",
+                }
+        if args.signers:
+            print(f"Generating keys for account authorized-key-0")
+            keys = gen_key(args.octez_docker_image)
+            for key_type in keys:
+                accounts[key_type]["authorized-key-0"] = {
+                    "key": keys[key_type],
+                    "is_bootstrap_baker_account": False,
+                    "bootstrap_balance": "1000000",
                 }
 
     # First 2 nodes are acting as bootstrap nodes for the others, and run in
@@ -254,33 +267,40 @@ def main():
     # Initialize bakers data and assign to DAL nodes in round-robin fashion
     bakers = {}
     for i, char in enumerate(string.ascii_lowercase[: args.bakers]):
-        dal_node_index = i % args.dal_nodes
         baker_name = f"{BAKER_NAME}-{char}"
         bakers[char] = {
             "bake_using_accounts": [baker_name],
-            "dal_node_rpc_url": f"http://{DAL_NODE_NAME}-{dal_node_index}:10732",
         }
-        # Add the baker to the DAL node's attest_for_accounts list
-        dalNodes[f"{DAL_NODE_NAME}-{dal_node_index}"]["attest_using_accounts"].append(
-            baker_name
-        )
+        if args.signers:
+            bakers[char]["authorized_keys"] = ["authorized-key-0"]
+        if args.dal_nodes:
+            dal_node_index = i % args.dal_nodes
+            bakers[char]["dal_node_rpc_url"] = f"http://{DAL_NODE_NAME}-{dal_node_index}:10732"
+            # Add the baker to the DAL node's attest_for_accounts list
+            dalNodes[f"{DAL_NODE_NAME}-{dal_node_index}"]["attest_using_accounts"].append(
+                baker_name
+            )
 
     # Assign node_rpc_url for bakers
     assign_node_rpc_url(bakers, args.nodes, L1_NODE_NAME)
 
-    octezSigners = {
-        "tezos-signer-0": {
-            "accounts": [
-                f"baker-{char}" for char in string.ascii_lowercase[: args.bakers]
-            ],
-            "authorized_keys": ["authorized-key-0"],
-        }
-    }
+    octezSigners = {}
+    if args.signers:
+        for i in range(args.bakers):
+            signer_index = i % args.signers
+
+            if not f"{SIGNER_NAME}-{signer_index}" in octezSigners:
+                octezSigners[f"{SIGNER_NAME}-{signer_index}"] = {
+                    "accounts": [],
+                    "authorized_keys": ["authorized-key-0"],
+                }
+            octezSigners[f"{SIGNER_NAME}-{signer_index}"]["accounts"].append(f"baker-{string.ascii_lowercase[i]}")
 
     base_constants["node_config_network"]["activation_account_name"] = f"{BAKER_NAME}-a"
-    base_constants["node_config_network"][
-        "activation_account_authorized_key"
-    ] = "authorized-key-0"
+    if args.signers:
+        base_constants["node_config_network"][
+            "activation_account_authorized_key"
+        ] = "authorized-key-0"
 
     with open(
         f"{os.path.dirname(os.path.realpath(__file__))}/parameters.yaml", "r"
