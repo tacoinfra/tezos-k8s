@@ -14,6 +14,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'Public-Node',
+        'Baker',
         'Private-Chain',
         'Indexers']
     },

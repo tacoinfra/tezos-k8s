@@ -41,7 +41,7 @@ https://pytezos.org/quick_start.html#requirements
 mkdir mkchain && cd mkchain
 python3 -m venv .venv
 . .venv/bin/activate
-pip install wheel && pip install mkchain
+pip install -e .
 ```
 
 Set [unbuffered IO](https://docs.python.org/3.6/using/cmdline.html#envvar-PYTHONUNBUFFERED) for python:
@@ -80,8 +80,10 @@ You can explicitly specify some values by:
 | -------------------------------- | ------------------------ | -------------------------------------------------------------- | ----------------------- |
 |                                  | -h                       | mkchain help message                                           |                         |
 |                                  | -v                       | mkchain version                                                |                         |
-|                                  | --number-of-bakers       | Number of baking nodes in the cluster                          | 1                       |
-|                                  | --number-of-nodes        | Number of non-baking nodes in the cluster                      | 0                       |
+|                                  | --bakers       | Number of baking nodes in the cluster                          | 1                       |
+|                                  | --nodes        | Number of non-baking nodes in the cluster                      | 0                       |
+|                                  | --signers        | Number of signers in the cluster                      | 1                       |
+|                                  | --dal-nodes        | Number of DAL nodes in the cluster                      | 1                       |
 | bootstrap_peers                  | --bootstrap-peers        | Peer ips to connect to                                         | []                      |
 | expected_proof_of_work           | --expected-proof-of-work | Node identity generation difficulty                            | 0                       |
 | images.octez                     | --octez-docker-image     | Version of the Octez docker image to run                       | tezos/tezos:v19.0 |
