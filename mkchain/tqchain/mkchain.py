@@ -275,11 +275,13 @@ def main():
             bakers[char]["authorized_keys"] = ["authorized-key-0"]
         if args.dal_nodes:
             dal_node_index = i % args.dal_nodes
-            bakers[char]["dal_node_rpc_url"] = f"http://{DAL_NODE_NAME}-{dal_node_index}:10732"
+            bakers[char][
+                "dal_node_rpc_url"
+            ] = f"http://{DAL_NODE_NAME}-{dal_node_index}:10732"
             # Add the baker to the DAL node's attest_for_accounts list
-            dalNodes[f"{DAL_NODE_NAME}-{dal_node_index}"]["attest_using_accounts"].append(
-                baker_name
-            )
+            dalNodes[f"{DAL_NODE_NAME}-{dal_node_index}"][
+                "attest_using_accounts"
+            ].append(baker_name)
 
     # Assign node_rpc_url for bakers
     assign_node_rpc_url(bakers, args.nodes, L1_NODE_NAME)
@@ -294,7 +296,9 @@ def main():
                     "accounts": [],
                     "authorized_keys": ["authorized-key-0"],
                 }
-            octezSigners[f"{SIGNER_NAME}-{signer_index}"]["accounts"].append(f"baker-{string.ascii_lowercase[i]}")
+            octezSigners[f"{SIGNER_NAME}-{signer_index}"]["accounts"].append(
+                f"baker-{string.ascii_lowercase[i]}"
+            )
 
     base_constants["node_config_network"]["activation_account_name"] = f"{BAKER_NAME}-a"
     if args.signers:
