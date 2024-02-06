@@ -1,5 +1,6 @@
 images:
   tezos_reward_distributor: trdo/tezos-reward-distributor:latest
+images_pull_policy: IfNotPresent
 
 tezos_k8s_images:
   # snapshotEngine is needed for upload of logs to bucket

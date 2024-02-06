@@ -50,7 +50,7 @@ spec:
                 name: storage
             - name: tezos-reward-distributor-cron-job
               image: {{ .Values.images.tezos_reward_distributor }}
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: {{ .Values.images_pull_policy }}
               volumeMounts:
                 - mountPath: /trd
                   name: storage
