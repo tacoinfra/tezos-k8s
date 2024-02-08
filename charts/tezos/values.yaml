@@ -362,7 +362,14 @@ smartRollupNodes: {}
 # ```
 # smartRollupNodes:
 #   rollup-node-0:
-#     operator_account: archive-baking-node-0
+#     operators:
+#       operating: archive-baking-node-0
+#       cementing: archive-baking-node-0
+#       executing_outbox: archive-baking-node-0
+#       batching1: batcher1-account
+#       batching2: batcher2-account
+#       batching3: batcher3-account
+#       batching4: batcher4-account
 #     rollup_address: sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf
 #     annotations: {}
 #     ingress:

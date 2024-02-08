@@ -12,7 +12,7 @@ cp /usr/local/share/tezos/evm_kernel/* "$ROLLUP_DATA_DIR_PREIMAGES"
 CMD="$TEZ_BIN/octez-smart-rollup-node \
   --endpoint http://tezos-node-rpc:8732 \
   -d $CLIENT_DIR \
-  run operator for ${ROLLUP_ADDRESS} with operators ${OPERATOR_ACCOUNT} \
+  run operator for ${ROLLUP_ADDRESS} with operators ${OPERATORS_PARAMS} \
   --data-dir ${ROLLUP_DATA_DIR} \
   --boot-sector-file /var/tezos/smart-rollup-boot-sector \
   --rpc-addr 0.0.0.0"
