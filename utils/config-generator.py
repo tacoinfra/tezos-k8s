@@ -237,7 +237,11 @@ def expose_secret_key(account_name):
         return account_name in MY_POD_CONFIG.get("accounts")
 
     if MY_POD_TYPE == "rollup":
-        return account_name == MY_POD_CONFIG.get("operator_account")
+        operators = MY_POD_CONFIG.get("operators")
+        if operators is not None:
+            return account_name in operators.values()
+        else:
+            return False
     if MY_POD_TYPE in ["node", "baker"]:
         if account_name in MY_POD_CONFIG.get("authorized_keys", {}):
             return True
