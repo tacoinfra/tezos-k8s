@@ -1,67 +1,24 @@
 {{- range $k, $v := .Values.smartRollupNodes }}
 
-{{- if $v.evm_proxy | default false }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: evm-proxy-{{ $k }}
+  name: sequencer-{{ $k }}
   namespace: {{ $.Release.Namespace }}
 spec:
   type: NodePort
   ports:
     - port: 8545
-      name: evm-proxy
+      name: sequencer
   selector:
-    app: evm-proxy-{{ $k }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: evm-proxy-{{ $k }}
-  namespace: {{ $.Release.Namespace }}
-{{- if $v.evm_proxy.annotations | default false }}
-{{- with $v.evm_proxy.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-{{- end }}
-{{- end }}
-spec:
-  podManagementPolicy: Parallel
-  replicas: 1
-  serviceName: evm-proxy-{{ $k }}
-  selector:
-    matchLabels:
-      app: evm-proxy-{{ $k }}
-  template:
-    metadata:
-      labels:
-        app: evm-proxy-{{ $k }}
-    spec:
-      containers:
-      - name: octez-evm-proxy
-        image: "{{ $.Values.images.octez }}"
-        imagePullPolicy: {{ $.Values.images_pull_policy }}
-        ports:
-        - containerPort: 8545
-          name: evm-proxy
-        command:
-          - /bin/sh
-        args:
-          - "-c"
-          - |
-{{ tpl ($.Files.Get "scripts/evm-proxy.sh") $ | indent 12 }}
-        env:
-          - name: MY_POD_NAME
-            value: {{ $k }}
-      securityContext:
-        fsGroup: 1000
+    app: rollup-{{ $k }}
 ---
 {{- if $v.evm_proxy.ingress | default false }}
 {{- if $v.evm_proxy.ingress.enabled | default false }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: evm-proxy-{{ $k }}
+  name: sequencer-{{ $k }}
   namespace: {{ $.Release.Namespace }}
 {{- with $v.evm_proxy.ingress.labels }}
   labels:
@@ -91,10 +48,9 @@ spec:
             path: /
             backend:
               service:
-                name: evm-proxy-{{ $k }}
+                name: sequencer-{{ $k }}
                 port:
-                  name: evm-proxy
-{{- end }}
+                  name: sequencer
 {{- end }}
 {{- end }}
 ---
@@ -159,6 +115,24 @@ spec:
               {{- $cleanKey := regexReplaceAll "[0-9]+$" $key "" }}
               {{ $cleanKey }}:{{ $value }}
               {{- end }}
+      - name: octez-sequencer
+        image: "{{ $.Values.images.octez }}"
+        imagePullPolicy: {{ $.Values.images_pull_policy }}
+        ports:
+        - containerPort: 8545
+          name: sequencer
+        command:
+          - /bin/sh
+        args:
+          - "-c"
+          - |
+{{ tpl ($.Files.Get "scripts/evm-sequencer.sh") $ | indent 12 }}
+        volumeMounts:
+        - mountPath: /var/tezos
+          name: var-volume
+        env:
+          - name: MY_POD_NAME
+            value: {{ $k }}
       initContainers:
       - image: {{ $.Values.tezos_k8s_images.utils }}
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}

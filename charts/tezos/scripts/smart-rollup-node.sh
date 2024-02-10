@@ -1,4 +1,4 @@
-set -ex
+set -e
 
 TEZ_VAR=/var/tezos
 TEZ_BIN=/usr/local/bin
@@ -9,7 +9,8 @@ ROLLUP_DATA_DIR_PREIMAGES="$ROLLUP_DATA_DIR/wasm_2_0_0"
 xxd -p -c 0 /usr/local/share/tezos/evm_kernel/evm_installer.wasm | tr -d '\n' > /var/tezos/smart-rollup-boot-sector
 mkdir -p "$ROLLUP_DATA_DIR_PREIMAGES"
 cp /usr/local/share/tezos/evm_kernel/* "$ROLLUP_DATA_DIR_PREIMAGES"
-ls -al $ROLLUP_DATA_DIR
+
+set -x
 $TEZ_BIN/octez-smart-rollup-node \
   --endpoint http://tezos-node-rpc:8732 \
   -d $CLIENT_DIR \
