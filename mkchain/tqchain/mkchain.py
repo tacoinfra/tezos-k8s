@@ -59,6 +59,11 @@ cli_args = {
         "default": 0,
         "type": int,
     },
+    "rollup_nodes": {
+        "help": "number of Rollups in the cluster",
+        "default": 0,
+        "type": int,
+    },
     "expected_proof_of_work": {
         "help": "Node identity generation difficulty",
         "default": 0,
@@ -120,6 +125,16 @@ def validate_args(args):
     if args.bakers < 1:
         print(f"Invalid argument --bakers ({args.bakers}) " f"must be non-zero")
         exit(1)
+
+    if args.rollup_nodes > 1:
+        print(f"Invalid argument --rollup_nodes ({args.bakers}) " f"must be less than 2")
+        exit(1)
+    if args.rollup_nodes == 1:
+        if "v19" in args.octez_docker_image:
+            print("You can't use an octez release for deploying an EVM rollup for now. Only master branch supported.")
+            print("Provide a different image with --octez-docker-image")
+            exit(1)
+
 
 
 def node_config(n):
@@ -210,6 +225,26 @@ def main():
                 },
                 "bootstrap_peers": ["dal-bootstrap:11732"],
             }
+
+    # Initialize DAL nodes data
+    smartRollupNodes = {}
+    if args.rollup_nodes:
+        smartRollupNodes = {
+            "evm-0": {
+                "operators": {
+                    "operating": "baker-a",
+                    "cementing": "baker-a",
+                    "executing_outbox": "baker-a",
+                    "batching": "baker-a",
+                },
+                "rollup_address": "sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf",
+                "evm_proxy": {
+                    "ingress": {
+                        "enabled": False
+                    }
+                }
+            }
+        }
 
     accounts = {"secret": {}, "public": {}}
     if old_values.get("accounts"):
@@ -311,10 +346,41 @@ def main():
     ) as yaml_file:
         parametersYaml = yaml.safe_load(yaml_file)
         activation = {
-            "activation": {
-                "protocol_hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH",
-                "protocol_parameters": parametersYaml,
-            },
+            "protocol_hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH",
+            "protocol_parameters": parametersYaml,
+        }
+
+    if args.rollup_nodes:
+        activation["bootstrap_parameters"] = {
+          "bootstrap_smart_rollups": [
+            {
+              "address": "sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf",
+              "pvm_kind": "wasm_2_0_0",
+              "kernel": "fromfile#/usr/local/share/tezos/evm_kernel/evm_installer.wasm",
+              "parameters_ty": {
+                "prim": "pair",
+                "args": [
+                  {
+                    "prim": "pair",
+                    "args": [
+                      { "prim": "bytes" },
+                      {
+                        "prim": "ticket",
+                        "args": [{ "prim": "unit" }]
+                      }
+                    ]
+                  },
+                  {
+                    "prim": "pair",
+                    "args": [
+                      { "prim": "nat" },
+                      { "prim": "bytes" }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
         }
 
     bootstrap_peers = args.bootstrap_peers if args.bootstrap_peers else []
@@ -326,9 +392,10 @@ def main():
         "accounts": accounts["secret"],
         "octezSigners": octezSigners,
         "dalNodes": dalNodes,
+        "smartRollupNodes": smartRollupNodes,
         "bakers": bakers,
         "nodes": nodes,
-        **activation,
+        "activation": activation,
     }
 
     with open(f"{files_path}_values.yaml", "w") as yaml_file:
