@@ -127,14 +127,17 @@ def validate_args(args):
         exit(1)
 
     if args.rollup_nodes > 1:
-        print(f"Invalid argument --rollup_nodes ({args.bakers}) " f"must be less than 2")
+        print(
+            f"Invalid argument --rollup_nodes ({args.bakers}) " f"must be less than 2"
+        )
         exit(1)
     if args.rollup_nodes == 1:
         if "v19" in args.octez_docker_image:
-            print("You can't use an octez release for deploying an EVM rollup for now. Only master branch supported.")
+            print(
+                "You can't use an octez release for deploying an EVM rollup for now. Only master branch supported."
+            )
             print("Provide a different image with --octez-docker-image")
             exit(1)
-
 
 
 def node_config(n):
@@ -238,11 +241,7 @@ def main():
                     "batching": "baker-a",
                 },
                 "rollup_address": "sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf",
-                "evm_proxy": {
-                    "ingress": {
-                        "enabled": False
-                    }
-                }
+                "evm_proxy": {"ingress": {"enabled": False}},
             }
         }
 
@@ -352,35 +351,29 @@ def main():
 
     if args.rollup_nodes:
         activation["bootstrap_parameters"] = {
-          "bootstrap_smart_rollups": [
-            {
-              "address": "sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf",
-              "pvm_kind": "wasm_2_0_0",
-              "kernel": "fromfile#/usr/local/share/tezos/evm_kernel/evm_installer.wasm",
-              "parameters_ty": {
-                "prim": "pair",
-                "args": [
-                  {
-                    "prim": "pair",
-                    "args": [
-                      { "prim": "bytes" },
-                      {
-                        "prim": "ticket",
-                        "args": [{ "prim": "unit" }]
-                      }
-                    ]
-                  },
-                  {
-                    "prim": "pair",
-                    "args": [
-                      { "prim": "nat" },
-                      { "prim": "bytes" }
-                    ]
-                  }
-                ]
-              }
-            }
-          ]
+            "bootstrap_smart_rollups": [
+                {
+                    "address": "sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf",
+                    "pvm_kind": "wasm_2_0_0",
+                    "kernel": "fromfile#/usr/local/share/tezos/evm_kernel/evm_installer.wasm",
+                    "parameters_ty": {
+                        "prim": "pair",
+                        "args": [
+                            {
+                                "prim": "pair",
+                                "args": [
+                                    {"prim": "bytes"},
+                                    {"prim": "ticket", "args": [{"prim": "unit"}]},
+                                ],
+                            },
+                            {
+                                "prim": "pair",
+                                "args": [{"prim": "nat"}, {"prim": "bytes"}],
+                            },
+                        ],
+                    },
+                }
+            ]
         }
 
     bootstrap_peers = args.bootstrap_peers if args.bootstrap_peers else []
