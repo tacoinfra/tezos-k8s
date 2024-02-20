@@ -94,9 +94,9 @@ eval $(minikube docker-env -u)
 helm repo add tacoinfra https://tacoinfra.github.io/tezos-helm-charts/
 ```
 
-## Using a custom Tezos build
+## Using a custom Octez build
 
-Create a clone of the `[tezos](https://gitlab.com/tezos/tezos)`
+Create a clone of the [Octez](https://gitlab.com/tezos/tezos)
 repository.  [Set up your development environment as usual](https://tezos.gitlab.io/introduction/howtoget.html#setting-up-the-development-environment-from-scratch).  Then run:
 
 ```shell
@@ -125,7 +125,7 @@ images:
   octez: <image>
 ```
 
-where image is `tezos:latest` or whatever.
+where the image is `tezos:latest`.
 
 Then install the chart as above.
 

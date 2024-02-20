@@ -309,12 +309,14 @@ serviceMonitor:
 
 # # Signers
 #
-# Define remote signers. Bakers automatically use signers in their namespace
+# You may define remote signers with tezos-k8s. Bakers automatically use signers in their namespace
 # that are configured to sign for the accounts they are baking for.
 # By default no signer is configured.
 #
 # https://tezos.gitlab.io/user/key-management.html#signer
 octezSigners: {}
+# These signers use the octez-signer binary.
+# 
 # Example:
 # ```
 # octezSigners:
@@ -325,8 +327,8 @@ octezSigners: {}
 #     # Names of accounts used to authenticate the baker to the signer.
 #     # The signer will only sign a request from a baker authenticated
 #     # by an allowed key.
-      # If set, any baker targeting this signer will automatically have
-      # the associated private key accessible locally.
+#     # If set, any baker targeting this signer will automatically have
+#     # the associated private key accessible locally.
 #     - authorized-key-0
 # ```
 #
@@ -334,6 +336,9 @@ octezSigners: {}
 # The `AWS_REGION` env var must be set.
 # https://github.com/tacoinfra/tacoinfra-remote-signer
 tacoinfraSigners: {}
+# These signers deploy the [Tacoifra remote signer](https://github.com/tacoinfra/remote-signer),
+# a program that passes signing requests to supported HSM or KMS devices.
+#
 # Example:
 # ```
 # tacoinfraSigners

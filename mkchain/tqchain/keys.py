@@ -39,7 +39,7 @@ def run_docker(image, entrypoint, *args):
     pull_docker_image(image)
     return subprocess.check_output(
         "docker run --entrypoint %s --rm %s %s" % (entrypoint, image, " ".join(args)),
-        stderr=subprocess.STDOUT,
+        stderr=subprocess.DEVNULL,
         shell=True,
     )
 
