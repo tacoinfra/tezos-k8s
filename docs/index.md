@@ -8,7 +8,7 @@ Use it to deploy:
 
 * a Tezos node
 * a Tezos RPC service
-* a Tezos baker (coming soon)
+* a Tezos baker
 * a Tezos private chain
 
 on your laptop or in a cloud platform such as AWS, Digitalocean or GCP.
@@ -32,4 +32,4 @@ helm install tezos-mainnet tacoinfra/tezos-chain \
 --namespace tacoinfra --create-namespace
 ```
 
-k8s will spin up an [Octez](https://tezos.gitlab.io/) node which will download and import a Tezos [mainnet tarball](https://tezos.gitlab.io/). This will take a few minutes.
+k8s will spin up an [Octez](https://tezos.gitlab.io/) node which will download and import a Tezos mainnet snapshot. This will take a few minutes.
