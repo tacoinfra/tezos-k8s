@@ -1,0 +1,11 @@
+{{- if .Values.api.appSettings }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tzkt.fullname" . }}-api-app
+  labels:
+    {{- include "tzkt.labels" . | nindent 4 }}
+data:
+  appsettings.json: |-
+    {{ .Values.api.appSettings | nindent 4 }}
+{{- end }}
