@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tzkt.fullname" . }}-db
+  labels:
+    {{- include "tzkt.labels" . | nindent 4 }}
+data:
+  POSTGRES_HOST: "{{ .Values.externalDatabase.host }}"
+  POSTGRES_PORT: "{{ .Values.externalDatabase.port }}"
+  POSTGRES_USER: "{{ .Values.externalDatabase.user }}"
+  POSTGRES_DB: "{{ .Values.externalDatabase.database }}"
+  POSTGRES_COMMAND_TIMEOUT: "{{ .Values.externalDatabase.commandTimeout }}"
+{{- if .Values.api.appSettings }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tzkt.fullname" . }}-api-appsettings
+  labels:
+    {{- include "tzkt.labels" . | nindent 4 }}
+data:
+  appsettings.json: |-
+    {{ .Values.api.appSettings | nindent 4 }}
+{{- end }}
+{{- if .Values.sync.appSettings }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tzkt.fullname" . }}-sync-appsettings
+  labels:
+    {{- include "tzkt.labels" . | nindent 4 }}
+data:
+  appsettings.json: |-
+    {{ .Values.sync.appSettings | nindent 4 }}
+{{- end }}
