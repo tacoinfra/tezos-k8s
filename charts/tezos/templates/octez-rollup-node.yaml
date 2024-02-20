@@ -155,8 +155,6 @@ spec:
       securityContext:
         fsGroup: 1000
       volumes:
-        - volume: var-volume
-          name: var-volume
         - name: tezos-accounts
           secret:
             secretName: tezos-secret
