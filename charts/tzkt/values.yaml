@@ -1,0 +1,117 @@
+# Default values for tzkt.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+tezos_k8s_images:
+  utils: ghcr.io/tacoinfra/tezos-k8s-utils:main
+
+## @section tzkt api configuration
+##
+api:
+  ## tzkt api image parameters
+  image:
+    repository: bakingbad/tzkt-api
+    tag: v1.13.2
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  ## @param port for tzkt api service
+  port: 5000
+  ## @param log level for tzkt api
+  logLevel: Information
+  ## @param appSettings Custom appSettings to run api,
+  ## e.g:
+  ## appSettings:
+  ##   {
+  ##     "Cache": {
+  ##       "LoadRate": 0.75,
+  ##       "MaxAccounts": 32000
+  ##     },
+  ##     ....
+  ##     "ResponseCache": {
+  ##       "CacheSize": 256
+  ##     },
+  ##     ....
+  ##    }
+  appSettings: {}
+
+## @section tzkt sync configuration
+##
+sync:
+  ## tzkt sync image parameters
+  image:
+    repository: bakingbad/tzkt-sync
+    tag: v1.13.2
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  ## @param tezos endpoint to point for indexing,
+  tezosNodeEndpoint: 'https://rpc.tzkt.io/mainnet/'
+  ## @param log level for tzkt sync
+  logLevel: Information
+  ## @param appSettings Custom appSettings to run api,
+  ## e.g:
+  ## appSettings:
+  ##   {
+  ##     "Protocols": {
+  ##       "Diagnostics": false,
+  ##       "Validation": true,
+  ##       "Fallback": null
+  ##     },
+  ##     "TezosNode": {
+  ##       "Endpoint": "https://rpc.tzkt.io/mainnet/",
+  ##       "Timeout": 60
+  ##     },
+  ##     "Quotes": {
+  ##       "Async": true,
+  ##       "Provider": {
+  ##         "Name": "TzktQuotes"
+  ##       }
+  ##     },
+  ##     ....
+  ##   }
+  appSettings: {}
+
+
+## External Database Configuration
+##
+externalDatabase:
+  ## @param externalDatabase.host External Database server host
+  ##
+  host: localhost
+  ## @param externalDatabase.port External Database server port
+  ##
+  port: 5432
+  ## @param externalDatabase.user External Database username
+  ##
+  user: "tzkt"
+  ## @param externalDatabase.password External Database user password
+  ##
+  password: ""
+  ## @param externalDatabase.database External Database database name
+  ##
+  database: "tzkt_db"
+  ## @param externalDatabase.commandTimeout Timeout of the DB command
+  commandTimeout: "600"
+
+#postgres:
+#  enabled: false

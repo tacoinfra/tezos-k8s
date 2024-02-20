@@ -1,0 +1,11 @@
+{{- if .Values.sync.appSettings }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tzkt.fullname" . }}-sync-app
+  labels:
+    {{- include "tzkt.labels" . | nindent 4 }}
+data:
+  appsettings.json: |-
+    {{ .Values.sync.appSettings | nindent 4 }}
+{{- end }}
