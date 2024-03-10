@@ -68,5 +68,5 @@ Create the name of the service account to use
 
 {{/* tzkt api httl url */}}
 {{- define "tzkt.apiUrl" -}}
-{{ print "http://0.0.0.0:%s" .Values.api.port }}
+{{ print "http://0.0.0.0:" .Values.api.port }}
 {{- end -}}
