@@ -63,7 +63,7 @@ Create the name of the service account to use
 
 {{/* tzkt db connection string */}}
 {{- define "tzkt.connectionString" -}}
-{{ print " " "server=$(POSTGRES_HOST);port=$(POSTGRES_PORT);database=$(POSTGRES_DB);username=$(POSTGRES_USER);password=$(POSTGRES_PASSWORD);command timeout=$(POSTGRES_COMMAND_TIMEOUT);" }}
+{{printf "server=$(POSTGRES_HOST);port=$(POSTGRES_PORT);database=$(POSTGRES_DB);username=$(POSTGRES_USER);password=$(POSTGRES_PASSWORD);command timeout=$(POSTGRES_COMMAND_TIMEOUT);" }}
 {{- end -}}
 
 {{/* tzkt api httl url */}}

@@ -91,6 +91,9 @@ sync:
   ##   }
   appSettings: {}
 
+service:
+  type: ClusterIP
+  port: 5000
 
 ## External Database Configuration
 ##

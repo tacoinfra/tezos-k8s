@@ -50,33 +50,33 @@ spec:
             exec:
               command: ["cat", "/tmp/synced"]
         - name: api
-          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
           imagePullPolicy: "{{ .Values.api.image.pullPolicy }}"
           ports:
             - containerPort: {{ .Values.api.port }}
           env:
             - name: Logging__LogLevel__Default
-              value: {{ .Values.api.logLevel }}
+              value: "{{ .Values.api.logLevel }}"
             - name: ConnectionStrings__DefaultConnection
-              value: {{- include "tzkt.connectionString" . }}
+              value: "{{- include "tzkt.connectionString" . }}"
             - name: TZKT_API_KESTREL__ENDPOINTS__HTTP__URL
-              value: {{- include "tzkt.apiUrl" }}
+              value: "{{- include "tzkt.apiUrl" . }}"
           envFrom:
             - secretRef:
                 name: {{ include "tzkt.fullname" . }}-db-creds
         - name: indexer
-          image: "{{ .Values.sync.image.repository }}:{{ .Values.sync.image.tag}}"
+          image: {{ .Values.sync.image.repository }}:{{ .Values.sync.image.tag}}
           imagePullPolicy: "{{ .Values.sync.image.pullPolicy }}"
           volumeMounts:
             - name: tzkt-env
               mountPath: /etc/tzkt
           env:
             - name: Logging__LogLevel__Default
-              value: {{ .Values.sync.logLevel }}
+              value: "{{ .Values.sync.logLevel }}"
             - name: TezosNode__Endpoint
-              value: {{ .Values.sync.tezosNodeEndpoint }}
+              value: "{{ .Values.sync.tezosNodeEndpoint }}"
             - name: ConnectionStrings__DefaultConnection
-              value: {{- include "tzkt.connectionString" . }}
+              value: "{{- include "tzkt.connectionString" . }}"
           envFrom:
             - secretRef:
                 name: {{ include "tzkt.fullname" . }}-db-creds
