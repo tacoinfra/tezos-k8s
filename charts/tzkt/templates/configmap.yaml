@@ -15,7 +15,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "tzkt.fullname" . }}-api
+  name: {{ include "tzkt.fullname" . }}-api-appsettings
   labels:
     {{- include "tzkt.labels" . | nindent 4 }}
 data:
@@ -27,7 +27,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "tzkt.fullname" . }}-sync
+  name: {{ include "tzkt.fullname" . }}-sync-appsettings
   labels:
     {{- include "tzkt.labels" . | nindent 4 }}
 data:

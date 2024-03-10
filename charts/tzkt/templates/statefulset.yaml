@@ -54,6 +54,12 @@ spec:
           imagePullPolicy: "{{ .Values.api.image.pullPolicy }}"
           ports:
             - containerPort: {{ .Values.api.port }}
+        {{- if .Values.api.appSettings }}
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: {{ include "tzkt.fullname" . }}-api-appsettings
+              subPath: appsettings.json
+        {{- end }}
           env:
             - name: Logging__LogLevel__Default
               value: "{{ .Values.api.logLevel }}"
@@ -72,6 +78,11 @@ spec:
           volumeMounts:
             - name: tzkt-env
               mountPath: /etc/tzkt
+          {{- if .Values.sync.appSettings }}
+            - mountPath: /app/appsettings.json
+              name:  {{ include "tzkt.fullname" . }}-sync-appsettings
+              subPath: appsettings.json
+          {{- end }}
           env:
             - name: Logging__LogLevel__Default
               value: "{{ .Values.sync.logLevel }}"
@@ -87,3 +98,13 @@ spec:
       volumes:
         - name: tzkt-env
           emptyDir: {}
+      {{- if .Values.api.appSettings }}
+        - configMap:
+            name:  {{ include "tzkt.fullname" . }}-api-appsettings
+          name: {{ include "tzkt.fullname" . }}-api-appsettings
+      {{- end }}
+      {{- if .Values.sync.appSettings }}
+        - configMap:
+            name:  {{ include "tzkt.fullname" . }}-sync-appsettings
+          name: {{ include "tzkt.fullname" . }}-sync-appsettings
+      {{- end }}
