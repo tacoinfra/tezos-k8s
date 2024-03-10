@@ -10,7 +10,7 @@ api:
   ## tzkt api image parameters
   image:
     repository: bakingbad/tzkt-api
-    tag: v1.13.2
+    tag: 1.13.2
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -50,7 +50,7 @@ sync:
   ## tzkt sync image parameters
   image:
     repository: bakingbad/tzkt-sync
-    tag: v1.13.2
+    tag: 1.13.2
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images

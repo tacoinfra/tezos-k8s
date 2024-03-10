@@ -62,6 +62,8 @@ spec:
             - name: TZKT_API_KESTREL__ENDPOINTS__HTTP__URL
               value: "{{- include "tzkt.apiUrl" . }}"
           envFrom:
+            - configMapRef:
+                name: {{ include "tzkt.fullname" . }}-db
             - secretRef:
                 name: {{ include "tzkt.fullname" . }}-db-creds
         - name: indexer
@@ -78,6 +80,8 @@ spec:
             - name: ConnectionStrings__DefaultConnection
               value: "{{- include "tzkt.connectionString" . }}"
           envFrom:
+            - configMapRef:
+                name: {{ include "tzkt.fullname" . }}-db
             - secretRef:
                 name: {{ include "tzkt.fullname" . }}-db-creds
       volumes:
