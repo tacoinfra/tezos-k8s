@@ -2,7 +2,7 @@ set -e
 
 bin_dir="/usr/local/bin"
 data_dir="/var/tezos"
-smart_rollup_node_dir="$data_dir/rollup"
+rollup_dir="$data_dir/rollup"
 smart_rollup_node="$bin_dir/octez-smart-rollup-node"
 snapshot_file=${rollup_dir}/rollup.snapshot
 
