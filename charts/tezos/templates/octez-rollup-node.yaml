@@ -157,7 +157,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: "15Gi"
+            storage: "50Gi"
 ---
 {{- if $v.ingress | default false }}
 {{- if $v.ingress.enabled | default false }}
