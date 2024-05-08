@@ -316,7 +316,7 @@ serviceMonitor:
 # https://tezos.gitlab.io/user/key-management.html#signer
 octezSigners: {}
 # These signers use the octez-signer binary.
-#
+# 
 # Example:
 # ```
 # octezSigners:
@@ -429,8 +429,8 @@ dalNodes: {}
 
 # When spinning up nodes, tezos-k8s will attempt to download a snapshot from a
 # known source. This should be a url to a json metadata file in the format
-# xtz-shots uses. If you want to use a specific snapshot, sync from scratch, or
-# create a private chain, set to `null`.
+# xtz-shots uses. If you want to sync from scratch or for a private chain, set
+# to `null`.
 snapshot_source: null
 
 # By default, tezos-k8s will download and unpack snapshots.
@@ -453,7 +453,7 @@ prefer_tarballs: false
 archive_tarball_url: null
 full_snapshot_url: null # e.g. https://snapshots.eu.tzinit.org/mainnet/full
 full_tarball_url: null
-rolling_snapshot_url: null # e.g. https://snapshots.eu.tzinit.org/mainnet/rolling
+rolling_snapshot_url: null # e.g. https://snapshots.us.tzinit.org/mainnet/rolling
 rolling_tarball_url: null
 
 # List of peers for nodes to connect to. Gets set under config.json `p2p` field

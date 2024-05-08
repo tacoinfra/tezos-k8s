@@ -135,7 +135,7 @@ spec:
         appType: octez-node
         node_class: rolling-node
     spec:
-      containers:
+      containers:        
         - name: octez-node
           image: "tezos/tezos:v19.0"
           imagePullPolicy: IfNotPresent
@@ -145,27 +145,27 @@ spec:
             - "-c"
             - |
               #!/bin/sh
-
+              
               set -xe
-
+              
               # ensure we can run octez-client commands without specifying client dir
               ln -s /var/tezos/client /home/tezos/.tezos-client
               #
               # Not every error is fatal on start.
               # So, we try a few times with increasing delays:
-
+              
               for d in 1 1 5 10 20 60 120; do
               	/usr/local/bin/octez-node run				\
               			--bootstrap-threshold 0			\
               			--config-file /etc/tezos/config.json
               	sleep $d
               done
-
+              
               #
               # Keep the container alive for troubleshooting on failures:
-
+              
               sleep 3600
-
+              
           envFrom:
           env:
             - name: DAEMON
@@ -185,7 +185,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /is_synced
-              port: 31732
+              port: 31732                                
         - name: sidecar
           image: "ghcr.io/tacoinfra/tezos-k8s-utils:main"
           imagePullPolicy: IfNotPresent
@@ -194,7 +194,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: tezos-config
-          env:
+          env:    
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
@@ -218,8 +218,8 @@ spec:
             limits:
               memory: 100Mi
             requests:
-              memory: 80Mi
-      initContainers:
+              memory: 80Mi        
+      initContainers:        
         - name: config-init
           image: "tezos/tezos:v19.0"
           imagePullPolicy: IfNotPresent
@@ -229,10 +229,10 @@ spec:
             - "-c"
             - |
               set -e
-
+              
               echo "Writing custom configuration for public node"
               mkdir -p /etc/tezos/data
-
+              
               # if config already exists (container is rebooting), dump and delete it.
               if [ -e /etc/tezos/data/config.json ]; then
                 printf "Found pre-existing config.json:\n"
@@ -240,20 +240,20 @@ spec:
                 printf "Deleting\n"
                 rm -rvf /etc/tezos/data/config.json
               fi
-
+              
               /usr/local/bin/octez-node config init		\
                   --config-file /etc/tezos/data/config.json	\
                   --data-dir /etc/tezos/data			\
                   --network $CHAIN_NAME
-
+              
               cat /etc/tezos/data/config.json
-
+              
               printf "\n\n\n\n\n\n\n"
-
+              
           envFrom:
             - configMapRef:
                 name: tezos-config
-          env:
+          env:    
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
@@ -272,7 +272,7 @@ spec:
             - mountPath: /etc/tezos
               name: config-volume
             - mountPath: /var/tezos
-              name: var-volume
+              name: var-volume        
         - name: config-generator
           image: "ghcr.io/tacoinfra/tezos-k8s-utils:main"
           imagePullPolicy: IfNotPresent
@@ -281,7 +281,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: tezos-config
-          env:
+          env:    
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
@@ -302,7 +302,7 @@ spec:
             - mountPath: /var/tezos
               name: var-volume
             - mountPath: /etc/secret-volume
-              name: tezos-accounts
+              name: tezos-accounts        
         - name: snapshot-downloader
           image: "ghcr.io/tacoinfra/tezos-k8s-utils:main"
           imagePullPolicy: IfNotPresent
@@ -311,7 +311,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: tezos-config
-          env:
+          env:    
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
@@ -330,7 +330,7 @@ spec:
             - mountPath: /etc/tezos
               name: config-volume
             - mountPath: /var/tezos
-              name: var-volume
+              name: var-volume        
         - name: snapshot-importer
           image: "tezos/tezos:v19.0"
           imagePullPolicy: IfNotPresent
@@ -340,41 +340,41 @@ spec:
             - "-c"
             - |
               set -e
-
+              
               bin_dir="/usr/local/bin"
               data_dir="/var/tezos"
               node_dir="$data_dir/node"
               node_data_dir="$node_dir/data"
               node="$bin_dir/octez-node"
               snapshot_file=${node_dir}/chain.snapshot
-
+              
               if [ ! -f ${snapshot_file} ]; then
                   echo "No snapshot to import."
                   exit 0
               fi
-
+              
               if [ -e ${node_data_dir}/context/store.dict ]; then
                   echo "Blockchain has already been imported. If a tarball"
                   echo "instead of a regular tezos snapshot was used, it was"
                   echo "imported in the snapshot-downloader container."
                   exit 0
               fi
-
+              
               cp -v /etc/tezos/config.json ${node_data_dir}
-
+              
               if [ -f ${node_dir}/chain.snapshot.block_hash ]; then
                   block_hash_arg="--block $(cat ${node_dir}/chain.snapshot.block_hash)"
               fi
-
+              
               ${node} snapshot import ${snapshot_file} --data-dir ${node_data_dir} --no-check
               find ${node_dir}
-
+              
               rm -rvf ${snapshot_file}
-
+              
           envFrom:
             - configMapRef:
                 name: tezos-config
-          env:
+          env:    
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
@@ -393,7 +393,7 @@ spec:
             - mountPath: /etc/tezos
               name: config-volume
             - mountPath: /var/tezos
-              name: var-volume
+              name: var-volume                
         - name: upgrade-storage
           image: "tezos/tezos:v19.0"
           imagePullPolicy: IfNotPresent
@@ -403,14 +403,14 @@ spec:
             - "-c"
             - |
               set -ex
-
+              
               if [ ! -e /var/tezos/node/data/context/store.dict ]
               then
                 printf "No store in data dir found, probably initial start, doing nothing."
                 exit 0
               fi
               octez-node upgrade storage --config /etc/tezos/config.json
-
+              
           envFrom:
           env:
             - name: DAEMON
@@ -421,7 +421,7 @@ spec:
             - mountPath: /var/tezos
               name: var-volume
       securityContext:
-        fsGroup: 1000
+        fsGroup: 1000      
       volumes:
         - emptyDir: {}
           name: config-volume
