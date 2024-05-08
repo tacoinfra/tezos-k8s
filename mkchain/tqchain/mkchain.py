@@ -165,7 +165,7 @@ def main():
         },
         "protocols": [
             {
-                "command": "Proxford",
+                "command": "PtParisB",
                 "vote": {"liquidity_baking_toggle_vote": "pass"},
             }
         ],
@@ -312,7 +312,7 @@ def main():
         parametersYaml = yaml.safe_load(yaml_file)
         activation = {
             "activation": {
-                "protocol_hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH",
+                "protocol_hash": "PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz",
                 "protocol_parameters": parametersYaml,
             },
         }
