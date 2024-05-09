@@ -275,6 +275,8 @@ bakers: {}
   #   node_rpc_url: http://octez-node-0:8732
   #   operations_pool: http://flashbake-endpoint:10732
   #   dal_node_rpc_url: http://dal-node:8732
+  #   node_selector:
+  #     nodeSelectorKey: nodeSelectorValue
 
 ## Configuration for K8s Service resources. Configuring the labels selector of a
 ## service will result in the service forwarding traffic only to pods that have
