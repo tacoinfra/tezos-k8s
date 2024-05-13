@@ -691,7 +691,7 @@ and octez version {octez_version}.
     return matching_snapshots[-1] if len(matching_snapshots) else None
 
 
-def make_url(domain, *path)
+def make_url(domain, *path):
     url = domain.rstrip('/')
     for p in path:
         _p = p.strip('/')
