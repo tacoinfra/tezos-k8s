@@ -29,11 +29,12 @@ data:
     }
   FULL_SNAPSHOT_URL: ""
   FULL_TARBALL_URL: ""
-  ROLLING_SNAPSHOT_URL: "https://snapshots.eu.tzinit.org/mainnet/rolling"
+  ROLLING_SNAPSHOT_URL: ""
   ROLLING_TARBALL_URL: ""
   ARCHIVE_TARBALL_URL: ""
   PREFER_TARBALLS: "false"
   SNAPSHOT_METADATA_NETWORK_NAME: ""
+  SNAPSHOT_SOURCE_URL: "https://snapshots.eu.tzinit.org/"
   SNAPSHOT_SOURCE: ""
   OCTEZ_VERSION: "tezos/tezos:v19.0"
   NODE_GLOBALS: |

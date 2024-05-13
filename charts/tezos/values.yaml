@@ -316,7 +316,7 @@ serviceMonitor:
 # https://tezos.gitlab.io/user/key-management.html#signer
 octezSigners: {}
 # These signers use the octez-signer binary.
-# 
+#
 # Example:
 # ```
 # octezSigners:
@@ -427,10 +427,24 @@ dalNodes: {}
 #    storageSize: 50Gi
 #    attesterProfiles: tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE
 
-# When spinning up nodes, tezos-k8s will attempt to download a snapshot from a
-# known source. This should be a url to a json metadata file in the format
-# xtz-shots uses. If you want to sync from scratch or for a private chain, set
-# to `null`.
+# When spinning up nodes, tezos-k8s attempts to download a snapshot from a
+# known source. Hard-coded snapshot URLs are used when specified.
+# NOTE: you cannot define both a `_url` and a `_tarball_url`.
+archive_tarball_url: null
+full_snapshot_url: null # e.g. https://snapshots.eu.tzinit.org/mainnet/full
+full_tarball_url: null
+rolling_snapshot_url: null # e.g. https://snapshots.us.tzinit.org/mainnet/rolling
+rolling_tarball_url: null
+
+# When a hard-coded URL is not provided, snapshots can be downloaded from
+# a URL-based source at <domain>/<network>/<mode>
+# This is the default option and set in `snapshot_source_url` for an EU region.
+# The snapshot URL for the <network> and <mode> (full or rolling) is generated.
+snapshot_source_url: https://snapshots.eu.tzinit.org/
+
+# When hard-coded URLs and a URL-based source are not provided, a URL to a
+# JSON metadata file in the xtz-shots format can be specified.
+# Set all snapshot values to `null` to sync from scratch or for a private chain.
 snapshot_source: null
 
 # By default, tezos-k8s will download and unpack snapshots.
@@ -443,18 +457,6 @@ prefer_tarballs: false
 # In case the network name in the snapshot metadata does not correspond to the
 # network_name configured in `node_config_network`, hardcode the value here.
 # snapshot_metadata_network_name: "weeklynet"
-
-# By default, tezos-k8s will attempt to download the right artifact from
-# `snapshot_source` set above. You can override and hard-code a snapshot URL
-# source below. When any of the below variables are set, `snapshot_source` above
-# will be ignored for all artifact types.
-## NOTE: `*_tarball_url` and `*_snapshot_url` are mutually exclusive
-## and cannot both be specified at the same time.
-archive_tarball_url: null
-full_snapshot_url: null # e.g. https://snapshots.eu.tzinit.org/mainnet/full
-full_tarball_url: null
-rolling_snapshot_url: null # e.g. https://snapshots.us.tzinit.org/mainnet/rolling
-rolling_tarball_url: null
 
 # List of peers for nodes to connect to. Gets set under config.json `p2p` field
 bootstrap_peers: []

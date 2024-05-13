@@ -144,6 +144,10 @@ def main():
                 node_snapshot_config,
                 indent=2,
             )
+
+            print("Generated node_snapshot_config_json :")
+            print(node_snapshot_config_json)
+
             if node_snapshot_config:
                 print("Generated snapshot_config.json :")
                 print(node_snapshot_config_json)
@@ -582,12 +586,14 @@ def create_node_snapshot_config_json(history_mode):
     archive_tarball_url = os.environ.get("ARCHIVE_TARBALL_URL")
     rolling_snapshot_url = os.environ.get("ROLLING_SNAPSHOT_URL")
     full_snapshot_url = os.environ.get("FULL_SNAPSHOT_URL")
+    snaphot_source_url = os.environ.get("SNAPSHOT_SOURCE_URL")
     if (
         rolling_tarball_url
         or full_tarball_url
         or rolling_snapshot_url
         or full_snapshot_url
         or archive_tarball_url
+        or snaphot_source_url
     ):
         print("Snapshot or tarball URL found, will ignore snapshot_source")
         match history_mode:
@@ -599,16 +605,31 @@ def create_node_snapshot_config_json(history_mode):
                         "url": rolling_snapshot_url,
                         "artifact_type": "tezos-snapshot",
                     }
+                elif snaphot_source_url:
+                    return {
+                        "url": make_url(snaphot_source_url, network_name, history_mode),
+                        "artifact_type": "tezos-snapshot",
+                    }
                 return
             case "full":
                 if full_tarball_url:
                     return {"url": full_tarball_url, "artifact_type": "tarball"}
                 elif full_snapshot_url:
                     return {"url": full_snapshot_url, "artifact_type": "tezos-snapshot"}
+                elif snaphot_source_url:
+                    return {
+                        "url": make_url(snaphot_source_url, network_name, history_mode),
+                        "artifact_type": "tezos-snapshot",
+                    }
                 return
             case "archive":
                 if archive_tarball_url:
                     return {"url": archive_tarball_url, "artifact_type": "tarball"}
+                elif snaphot_source_url:
+                    return {
+                        "url": make_url(snaphot_source_url, network_name, history_mode + '.tar.lz4'),
+                        "artifact_type": "tarball",
+                    }
                 return
             case _:
                 print(f"Error: history mode {history_mode} is not known.")
@@ -668,6 +689,14 @@ and octez version {octez_version}.
     matching_snapshots = sorted(matching_snapshots, key=lambda s: s.get("block_height"))
 
     return matching_snapshots[-1] if len(matching_snapshots) else None
+
+
+def make_url(domain, *path)
+    url = domain.rstrip('/')
+    for p in path:
+        _p = p.strip('/')
+        url = '{}/{}'.format(url, _p) if _p else url
+    return url
 
 
 if __name__ == "__main__":

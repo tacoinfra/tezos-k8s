@@ -156,6 +156,7 @@ def main():
         },
         "node_config_network": {"chain_name": args.chain_name},
         # Custom chains should not pull snapshots or tarballs
+        "snapshot_source_url": None,
         "snapshot_source": None,
         "node_globals": {
             # Needs a quotedstring otherwise helm interprets "Y" as true and it does not work
@@ -165,7 +166,7 @@ def main():
         },
         "protocols": [
             {
-                "command": "PtParisB",
+                "command": "Proxford",
                 "vote": {"liquidity_baking_toggle_vote": "pass"},
             }
         ],
@@ -312,7 +313,7 @@ def main():
         parametersYaml = yaml.safe_load(yaml_file)
         activation = {
             "activation": {
-                "protocol_hash": "PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz",
+                "protocol_hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH",
                 "protocol_parameters": parametersYaml,
             },
         }

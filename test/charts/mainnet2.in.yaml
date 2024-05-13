@@ -34,5 +34,3 @@ nodes:
     instances:
       - {}
   rolling-node: null
-
-rolling_snapshot_url: https://snapshots.eu.tzinit.org/mainnet/rolling
