@@ -26,9 +26,7 @@ metadata:
 {{- end }}
 {{- end }}
 spec:
-  podManagementPolicy: Parallel
   replicas: 1
-  serviceName: evm-proxy-{{ $k }}
   selector:
     matchLabels:
       app: evm-proxy-{{ $k }}
@@ -181,8 +179,7 @@ spec:
       securityContext:
         fsGroup: 1000
       volumes:
-        - volume: var-volume
-          name: var-volume
+        - name: var-volume
         - name: tezos-accounts
           secret:
             secretName: tezos-secret
