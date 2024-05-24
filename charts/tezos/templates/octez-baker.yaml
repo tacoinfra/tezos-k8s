@@ -1,4 +1,5 @@
 {{- range $k, $v := .Values.bakers }}
+{{- $_ := set $ "node_vals" $v }}
 
 apiVersion: apps/v1
 kind: StatefulSet
@@ -73,6 +74,7 @@ spec:
 {{- end }}
       securityContext:
         fsGroup: 1000
+{{- include "tezos.nodeSelectorConfig" $ | indent 6 }}
       volumes:
         - name: baker-config
           configMap:

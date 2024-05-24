@@ -316,7 +316,7 @@
   image: "{{ or $node_vals_images.octez $.Values.images.octez }}"
   imagePullPolicy: {{ $.Values.images_pull_policy }}
   command:
-    - /usr/local/bin/tezos-accuser-{{ .command }}
+    - /usr/local/bin/octez-accuser-{{ .command }}
   args:
     - run
     {{- end }}
