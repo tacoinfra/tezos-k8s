@@ -1,6 +1,6 @@
 # Snapshot Engine
 
-A Helm chart for creating Tezos snapshots and tarballs for faster node sync, all in kubernetes, and deploy them to a bucket with a static website.
+A Helm chart for creating Tezos snapshots and tarballs for faster node sync, all in Kubernetes, and deploy them to a bucket with a static website.
 
 Check out [xtz-shots.io](xtz-shots.io) for an example.
 
@@ -45,7 +45,7 @@ The Snapshot Engine is a Helm Chart to be deployed on a Kubernetes Cluster.  It 
 
 ## How To
 
-1. Create an S3 Bucket.  
+1. Create an S3 Bucket.
 
   :warning: If you want to make it available over the internet, you will need to make it a [Public Bucket](https://aws.amazon.com/premiumsupport/knowledge-center/read-access-objects-s3-bucket/) and with the following Bucket Policy.
 
@@ -72,9 +72,9 @@ The Snapshot Engine is a Helm Chart to be deployed on a Kubernetes Cluster.  It 
 
   Replace `<ARN_OF_S3_BUCKET>` with the ARN of your new S3 Bucket.
 
-  :warning: Pay close attention to the seemlingly redundant final `Resource` area. 
+  :warning: Pay close attention to the seemingly redundant final `Resource` area.
 
-  `/` and `/*` provide permission to the root and contents of the S3 Bucket respectively. 
+  `/` and `/*` provide permission to the root and contents of the S3 Bucket respectively.
 
   ```json
   {
@@ -225,7 +225,7 @@ We create only one snapshot at a time as having more than one in-progress slows 
 
 ### Snapshot Scheduler Deployment
 
-A Kubernetes Deployment called the **Snapshot Scheduler** runs indefinitely triggering a new Kubernetes Job called **Snapshot Maker**.  
+A Kubernetes Deployment called the **Snapshot Scheduler** runs indefinitely triggering a new Kubernetes Job called **Snapshot Maker**.
 
 Snapshot Scheduler waits until the Snapshot Maker Job is gone to schedule a new job. This way there are snapshots constantly being created instead of running on a schedule.
 
