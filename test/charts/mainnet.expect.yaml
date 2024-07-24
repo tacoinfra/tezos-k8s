@@ -35,7 +35,7 @@ data:
   PREFER_TARBALLS: "false"
   SNAPSHOT_METADATA_NETWORK_NAME: ""
   SNAPSHOT_SOURCE: "https://snapshots.tezos.marigold.dev/api/tezos-snapshots.json"
-  OCTEZ_VERSION: "tezos/tezos:v19.0"
+  OCTEZ_VERSION: "tezos/tezos:octez-v20.2"
   NODE_GLOBALS: |
     {
       "config": {},
@@ -137,7 +137,7 @@ spec:
     spec:
       containers:        
         - name: octez-node
-          image: "tezos/tezos:v19.0"
+          image: "tezos/tezos:octez-v20.2"
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -221,7 +221,7 @@ spec:
               memory: 80Mi        
       initContainers:        
         - name: config-init
-          image: "tezos/tezos:v19.0"
+          image: "tezos/tezos:octez-v20.2"
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -332,7 +332,7 @@ spec:
             - mountPath: /var/tezos
               name: var-volume        
         - name: snapshot-importer
-          image: "tezos/tezos:v19.0"
+          image: "tezos/tezos:octez-v20.2"
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -395,7 +395,7 @@ spec:
             - mountPath: /var/tezos
               name: var-volume                
         - name: upgrade-storage
-          image: "tezos/tezos:v19.0"
+          image: "tezos/tezos:octez-v20.2"
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh

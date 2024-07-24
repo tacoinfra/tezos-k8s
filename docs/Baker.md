@@ -10,7 +10,7 @@ The below `values.yaml` will start a ghostnet baker:
 
 ```
 images:
-  octez: tezos/tezos:v19.0 # replace with most recent version
+  octez: tezos/tezos:octez-v20.2 # replace with most recent version
 node_config_network:
   chain_name: ghostnet
 node_globals:
@@ -66,7 +66,7 @@ Configure a mainnet signer as follows:
 
 ```
 images:
-  octez: tezos/tezos:v19.0 # replace with most recent version
+  octez: tezos/tezos:octez-v20.2 # replace with most recent version
 protocols:
   - command: Proxford # replace with the most recent protocol
     vote:
