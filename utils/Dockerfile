@@ -29,6 +29,7 @@ COPY config-generator.sh /
 COPY entrypoint.sh /
 COPY logger.sh /
 COPY sidecar.py /
+COPY sidecar-evm.py /
 COPY snapshot-downloader.sh /
 COPY wait-for-dns.sh /
 ENTRYPOINT ["/entrypoint.sh"]
