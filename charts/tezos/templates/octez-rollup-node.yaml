@@ -160,6 +160,36 @@ spec:
               {{ $cleanKey }}:{{ $value }}
               {{- end }}
       initContainers:
+      - name: snapshot-downloader
+        image: "{{ $.Values.tezos_k8s_images.utils }}"
+        imagePullPolicy: { { $.Values.tezos_k8s_images_pull_policy } }
+        command:
+          - /bin/sh
+        volumeMounts:
+          - mountPath: /var/tezos
+            name: var-volume
+        args:
+          - "-c"
+          - |
+{ { tpl ($.Files.Get "scripts/smart-rollup-snapshot-downloader.sh") $ | indent 12 } }
+        env:
+          - name: SNAPSHOT_URL
+            value: { { $v.snapshot_url } }
+      - name: snapshot-importer
+        image: "{{ $.Values.images.octez }}"
+        imagePullPolicy: { { $.Values.images_pull_policy } }
+        command:
+          - /bin/sh
+        volumeMounts:
+          - mountPath: /var/tezos
+            name: var-volume
+        args:
+          - "-c"
+          - |
+{ { tpl ($.Files.Get "scripts/smart-rollup-snapshot-importer.sh") $ | indent 12 } }
+        env:
+          - name: NODE_RPC_URL
+            value: { { $v.node_rpc_url } }
       - image: {{ $.Values.tezos_k8s_images.utils }}
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         name: config-generator
@@ -194,7 +224,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: "15Gi"
+            storage: "400Gi"
 ---
 {{- if $v.ingress | default false }}
 {{- if $v.ingress.enabled | default false }}
