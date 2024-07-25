@@ -395,7 +395,9 @@ smartRollupNodes: {}
 #       tls: []
 #     evm:
 #       mode: observer
-#       image: tezos/tezos:master
+#       image:
+#         name: tezos/tezos:master
+#         pullPolicy: IfNotPresent
 #       annotations: {}
 #       ingress:
 #         enabled: false
@@ -419,7 +421,9 @@ smartRollupNodes: {}
 #       tls: []
 #     evm:
 #       mode: observer
-#       image: tezos/tezos:master
+#       image:
+#         name: tezos/tezos:master
+#         pullPolicy: IfNotPresent
 #       replicas: 2
 #       annotations: {}
 #       ingress:
