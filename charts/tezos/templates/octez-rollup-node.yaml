@@ -66,7 +66,11 @@ spec:
         args:
           - "-c"
           - |
-{{ tpl ($.Files.Get "scripts/smart-rollup-node.sh") $ | indent 12 }}
+{{- if eq $v.mode "observer" }}
+{{ tpl ($.Files.Get "scripts/smart-rollup-observer.sh") $ | indent 12 }}
+{{- else if eq $v.mode "operator" }}
+{{ tpl ($.Files.Get "scripts/smart-rollup-operator.sh") $ | indent 12 }}
+{{- end }}
         env:
           - name: ROLLUP_ADDRESS
             value: {{ $v.rollup_address }}
