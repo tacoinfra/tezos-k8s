@@ -90,7 +90,7 @@ spec:
           - |
 {{- else if eq $v.evm.mode "observer" }}
 {{ tpl ($.Files.Get "scripts/evm-observer.sh") $ | indent 12 }}
-{{- else if eq .Values.mode "sequencer" }}
+{{- else if eq $v.evm.mode "sequencer" }}
 {{ tpl ($.Files.Get "scripts/evm-sequencer.sh") $ | indent 12 }}
 {{- end }}
         volumeMounts:
