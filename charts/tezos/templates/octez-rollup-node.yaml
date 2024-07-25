@@ -33,7 +33,7 @@ kind: StatefulSet
 metadata:
   name: rollup-{{ $k }}
   namespace: {{ $.Release.Namespace }}
-{{- if $v.annotations | default false }}
+{{- if $v.annotations }}
 {{- with $v.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -209,6 +209,7 @@ spec:
                 name: rollup-{{ $k }}
                 port:
                   name: rollup
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
