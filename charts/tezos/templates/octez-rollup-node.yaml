@@ -82,7 +82,7 @@ spec:
         imagePullPolicy: {{ $v.evm.image.pullPolicy | default $.Values.images_pull_policy }}
         ports:
           - containerPort: 8545
-            name: sequencer
+            name: evm
         command:
           - /bin/sh
         args:
