@@ -131,23 +131,6 @@ spec:
         env:
           - name: NODE_RPC_URL
             value: { { $v.node_rpc_url } }
-{{- if $v.evm }}
-        - name: evm-state-importer
-          image: "{{ $v.evm.image.name | default $.Values.images.octez }}"
-          imagePullPolicy: {{ $v.evm.image.pullPolicy | default $.Values.images_pull_policy }}
-          command:
-            - /bin/sh
-          volumeMounts:
-            - mountPath: /var/tezos
-              name: var-volume
-          args:
-            - "-c"
-            - |
-{ { tpl ($.Files.Get "scripts/evm-state-init.sh") $ | indent 12 } }
-        env:
-          - name: ROLLUP_URL
-            value: { { $v.rollup_url } }
-{{ end }}
       - image: {{ $.Values.tezos_k8s_images.utils }}
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         name: config-generator
