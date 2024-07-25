@@ -1,6 +1,6 @@
 {{- range $k, $v := .Values.smartRollupNodes }}
 
-{{- if $v.evm | default false }}
+{{- if $v.evm }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -76,7 +76,7 @@ spec:
               {{- $cleanKey := regexReplaceAll "[0-9]+$" $key "" }}
               {{ $cleanKey }}:{{ $value }}
               {{- end }}
-{{- if $v.evm | default false }}
+{{- if $v.evm }}
       - name: octez-evm-{{ $v.evm.mode }}
         image: "{{ $v.evm.image.name | default $.Values.images.octez }}"
         imagePullPolicy: {{ $v.evm.image.pullPolicy | default $.Values.images_pull_policy }}
@@ -131,7 +131,7 @@ spec:
         env:
           - name: NODE_RPC_URL
             value: { { $v.node_rpc_url } }
-{{- if $v.evm | default false }}
+{{- if $v.evm }}
         - name: evm-state-importer
           image: "{{ $v.evm.image.name | default $.Values.images.octez }}"
           imagePullPolicy: {{ $v.evm.image.pullPolicy | default $.Values.images_pull_policy }}
