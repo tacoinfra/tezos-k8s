@@ -74,6 +74,8 @@ spec:
         env:
           - name: ROLLUP_ADDRESS
             value: {{ $v.rollup_address }}
+          - name: ROLLUP_PREIMAGES_ENDPOINT
+            values: {{ $v.preimages_endpoins }}
           - name: OPERATORS_PARAMS
             value: >
               {{- range $key, $value := $v.operators }}
