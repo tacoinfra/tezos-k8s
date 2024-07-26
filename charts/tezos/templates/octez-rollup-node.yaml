@@ -85,7 +85,7 @@ spec:
 {{- if $v.evm }}
       - name: octez-evm-{{ $v.evm.mode }}
         image: "{{ $v.evm.image.name | default $.Values.images.octez }}"
-        imagePullPolicy: {{ $v.evm.image.pullPolicy | default .Values.images_pull_policy }}
+        imagePullPolicy: {{ $v.evm.image.pullPolicy | default $.Values.images_pull_policy }}
         ports:
           - containerPort: 8545
             name: evm
@@ -105,6 +105,12 @@ spec:
         env:
           - name: MY_POD_NAME
             value: {{ $k }}
+          - name: ROLLUP_PREIMAGES_ENDPOINT
+            value: {{ $v.preimages_endpoint }}
+          {{- if eq $v.evm.mode "observer" }}
+          - name: EVM_NODE_ENDPOINT
+            value: {{ $v.evm.evm_endpoint }}
+          {{- end }}
 {{ end }}
       initContainers:
       - name: snapshot-downloader
