@@ -26,3 +26,5 @@ echo "Did not find a pre-existing smart rollup snapshot."
 echo "Downloading ${SNAPSHOT_URL}"
 mkdir -p "$rollup_data_dir"
 curl -LfsS ${SNAPSHOT_URL} | tee >(sha256sum > ${snapshot_file}.sha256sum) > "$snapshot_file"
+
+chown -R 1000:1000 "$data_dir"
