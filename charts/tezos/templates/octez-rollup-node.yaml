@@ -155,6 +155,8 @@ spec:
             name: tezos-accounts
       securityContext:
         fsGroup: 1000
+      nodeSelector:
+        {{- toYaml $v.nodeSelector | nindent 8 }}
       volumes:
         - volume: var-volume
           name: var-volume
@@ -170,6 +172,9 @@ spec:
         resources:
           requests:
             storage: "400Gi"
+      {{- if $v.storageClassName }}
+        storageClassName: {{ $v.storageClassName }}
+      {{- end }}
 ---
 {{- if $v.ingress | default false }}
 {{- if $v.ingress.enabled | default false }}

@@ -2,13 +2,13 @@ set -e
 
 TEZ_VAR=/var/tezos
 TEZ_BIN=/usr/local/bin
-ROLLUP_DATA_DIR="$TEZ_VAR/rollup"
-EVM_DATA_DIR="$TEZ_VAR/evm"
+ROLLUP_DATA_DIR="${TEZ_VAR}/rollup"
+EVM_DATA_DIR="${TEZ_VAR}/evm"
 
 set -x
 
 if [ ! -e "${EVM_DATA_DIR}/store/store.1.mapping" ]; then
-  $TEZ_BIN/octez-evm-node init from rollup node ${ROLLUP_DATA_DIR} --data-dir ${SEQUENCER_DATA_DIR}
+  $TEZ_BIN/octez-evm-node init from rollup node ${ROLLUP_DATA_DIR} --data-dir ${EVM_DATA_DIR}
 fi
 
 CMD="$TEZ_BIN/octez-evm-node run observer \
