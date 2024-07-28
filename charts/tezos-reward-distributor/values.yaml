@@ -3,10 +3,8 @@ images:
 images_pull_policy: IfNotPresent
 
 tezos_k8s_images:
-  # snapshotEngine is needed for upload of logs to bucket
-  # since it already exists, we do not create a new container
-  # just for this task.
-  snapshotEngine: ghcr.io/tacoinfra/tezos-k8s-snapshotengine:main
+  # container with python for TRD
+  utils: ghcr.io/tacoinfra/tezos-k8s-utils:main
 
 # The node endpoint. It must be an archive node.
 # May start with https://
@@ -25,16 +23,11 @@ signer_addr: tezos-signer-0.tezos-signer:6732
 schedule: "0 */6 * * *"
 
 # Where TRD gets its payout data from.
-# Defaults to rpc. When using rpc, you must set `tezos_node_addr` to an archive node.
-#
-# Pick one of "rpc", "tzstats", "tzkt"
-reward_data_provider: "rpc"
+# Defaults to tzkt (the only option)
+reward_data_provider: "tzkt"
 
 # Tezos Network. Can be MAINNET or GHOSTNET
 network: MAINNET
-
-# Enable adjusted early payouts. Pay out 6-9 days after delegation instead of 18-21 days.
-adjusted_early_payouts: false
 
 # Set initial cycle to pay rewards from. Set to -1 to start from just finished cycle.
 initial_cycle: -1
@@ -114,12 +107,8 @@ trd_config:
   #       Rewards for cycle %CYCLE% are completed.
   #       We paid out %TREWARDS% tez in rewards to %NDELEGATORS% delegators.
 
-# optionally upload all TRD state to a bucket. This allows all data to be examined
-# when the cronjob is not running.
-bucket_upload:
-  bucket_endpoint_url:
-  bucket_name: 
-bucket_upload_secrets:
-  access_key_id:
-  default_region:
-  secret_access_key:
+# slack webhook to be alerted when TRD fails
+# slack_webhook: "https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
+
+# baker alias to push to slack webhook
+# baker_alias: "mybaker"
