@@ -41,7 +41,7 @@ extra_trd_args: "--do_not_publish_stats"
 # For details, please consult TRD documentation:
 #  https://tezos-reward-distributor-organization.github.io/tezos-reward-distributor/
 trd_config:
-  # version: 1.0
+  version: 1.0
   # baking_address: tz1WrZpjVRpsmjv8VL3781RhyLi5JyHsGXK2
   # payment_address: tz1WrZpjVRpsmjv8VL3781RhyLi5JyHsGXK2
   # rewards_type: actual
@@ -108,7 +108,7 @@ trd_config:
   #       We paid out %TREWARDS% tez in rewards to %NDELEGATORS% delegators.
 
 # slack webhook to be alerted when TRD fails
-# slack_webhook: "https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
+slack_webhook: "https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
 
 # baker alias to push to slack webhook
 # baker_alias: "mybaker"

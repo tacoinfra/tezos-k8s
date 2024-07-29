@@ -48,7 +48,7 @@ spec:
               volumeMounts:
               - mountPath: /trd
                 name: storage
-            containers:
+          containers:
             - name: tezos-reward-distributor-cron-job
               image: {{ .Values.images.tezos_reward_distributor }}
               imagePullPolicy: {{ .Values.images_pull_policy }}
@@ -82,7 +82,7 @@ spec:
               - name: DRY_RUN
                 value: "{{ .Values.dry_run }}"
               - name: BAKER_ALIAS
-                value: "{{ .Values.baker_alias || default 'unknown' }}"
+                value: "{{ .Values.baker_alias | default "unknown" }}"
               - name: SLACK_WEBHOOK
                 valueFrom:
                   secretKeyRef:
