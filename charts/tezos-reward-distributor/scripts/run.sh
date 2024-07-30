@@ -9,6 +9,7 @@ if [ "${DRY_RUN}" == "false" ]; then
 else
   dry_run_arg="--dry_run"
 fi
+
 python src/main.py \
   -M 2 \
   --reward_data_provider ${REWARD_DATA_PROVIDER} \
@@ -23,10 +24,17 @@ python src/main.py \
 
 # if TRD fails, send a slack alert
 if [ $? -ne 0 ]; then
-  # check if webhook is set
-  if [ -z "${SLACK_WEBHOOK}" ]; then
-    echo "TRD failed, but SLACK_WEBHOOK is not set, failing job"
+  # check if bot token and channel are set
+  if [ -z "${SLACK_BOT_TOKEN}" ] || [ -z "${SLACK_CHANNEL}" ]; then
+    echo "TRD failed, but SLACK_BOT_TOKEN or SLACK_CHANNEL is not set, failing job"
     exit 1
   fi
-  curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Payout failed for $BAKER_ALIAS\"}" ${SLACK_WEBHOOK}
+  curl -X POST -H 'Authorization: Bearer '${SLACK_BOT_TOKEN} -H 'Content-type: application/json' \
+    --data "{\"channel\":\"${SLACK_CHANNEL}\", \"text\":\"Payout failed for $BAKER_ALIAS\"}" \
+    https://slack.com/api/chat.postMessage | jq '.ok' | grep true
+  if [ $? -ne 0 ]; then
+    echo "Failed to send Slack alert"
+    exit 1
+  fi
 fi
+

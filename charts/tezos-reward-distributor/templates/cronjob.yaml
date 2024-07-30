@@ -83,9 +83,9 @@ spec:
                 value: "{{ .Values.dry_run }}"
               - name: BAKER_ALIAS
                 value: "{{ .Values.baker_alias | default "unknown" }}"
-              - name: SLACK_WEBHOOK
+              - name: SLACK_BOT_TOKEN
                 valueFrom:
                   secretKeyRef:
                     name: {{ include "tezos-reward-distributor.fullname" . }}-secret
-                    key: slack_webhook
+                    key: slack_bot_token
           restartPolicy: OnFailure
