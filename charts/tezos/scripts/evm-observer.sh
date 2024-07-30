@@ -6,6 +6,19 @@ ROLLUP_DATA_DIR="${TEZ_VAR}/rollup"
 EVM_DATA_DIR="${TEZ_VAR}/evm"
 EVM_CONFIG_FILE="${EVM_DATA_DIR}/config.json"
 
+# Wait till rollup node to be fully synchronized to run init from rollup command
+WAIT_LIMIT=30
+COUNTER=0
+while [ "$(curl -s http://localhost:8932/local/synchronized)" != "synchronized" ] && [ $COUNTER -lt $WAIT_LIMIT ]; do
+  echo "polling ${COUNTER}/${WAIT_LIMIT}: rollup node not synchronized yet"
+  sleep 60
+done
+
+if [ "$(curl -s http://localhost:8932/local/synchronized)" != "synchronized" ]; then
+  echo "ERROR: rollup node not synchronized within wait limit, exiting...."
+  exit 1
+fi
+
 if [ ! -e "${EVM_DATA_DIR}/store.sqlite" ]; then
   $TEZ_BIN/octez-evm-node init from rollup node ${ROLLUP_DATA_DIR} --data-dir ${EVM_DATA_DIR}
 fi
