@@ -82,6 +82,12 @@ spec:
               {{- $cleanKey := regexReplaceAll "[0-9]+$" $key "" }}
               {{ $cleanKey }}:{{ $value }}
               {{- end }}
+{{- if $v.resources }}
+{{- with $v.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+{{- end }}
+{{- end }}
 {{- if $v.evm }}
       - name: octez-evm-{{ $v.evm.mode }}
         image: "{{ $v.evm.image.name | default $.Values.images.octez }}"
@@ -111,7 +117,13 @@ spec:
           - name: EVM_NODE_ENDPOINT
             value: {{ $v.evm.evm_endpoint }}
           {{- end }}
-{{ end }}
+{{- if $v.evm.resources }}
+{{- with $v.evm.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
       initContainers:
       - name: snapshot-downloader
         image: "{{ $.Values.tezos_k8s_images.utils }}"
