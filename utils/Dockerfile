@@ -20,6 +20,7 @@ RUN     PIP_INST="pip --no-cache install"					\
   && $PIP_INST base58 pynacl					\
   && $PIP_INST mnemonic pytezos requests				\
   && $PIP_INST pyblake2 pysodium flask \
+  && $PIP_INST web3 \
   && apk del .build-deps \
   && $APK_ADD jq netcat-openbsd curl binutils \
   && $APK_ADD lz4
@@ -29,6 +30,7 @@ COPY config-generator.sh /
 COPY entrypoint.sh /
 COPY logger.sh /
 COPY sidecar.py /
+COPY sidecar-evm.py /
 COPY snapshot-downloader.sh /
 COPY wait-for-dns.sh /
 ENTRYPOINT ["/entrypoint.sh"]
