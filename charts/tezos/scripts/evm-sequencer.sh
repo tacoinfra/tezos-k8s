@@ -7,9 +7,8 @@ EVM_DATA_DIR="$TEZ_VAR/evm"
 
 set -x
 
-if [ ! -e "/var/tezos/sequencer/store/store.1.mapping" ]; then
-  octez-evm-node init from rollup node ${ROLLUP_DATA_DIR} \
-  --data-dir ${EVM_DATA_DIR}
+if [ ! -e "${EVM_DATA_DIR}/store/store.dict" ]; then
+  $TEZ_BIN/octez-evm-node init from rollup node ${ROLLUP_DATA_DIR} --data-dir ${EVM_DATA_DIR}
 fi
 
 

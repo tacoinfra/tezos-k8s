@@ -6,7 +6,7 @@ ROLLUP_DATA_DIR="${TEZ_VAR}/rollup"
 EVM_DATA_DIR="${TEZ_VAR}/evm"
 EVM_CONFIG_FILE="${EVM_DATA_DIR}/config.json"
 
-if [ ! -e "${EVM_DATA_DIR}/store/store.1.mapping" ]; then
+if [ ! -e "${EVM_DATA_DIR}/store.sqlite" ]; then
   $TEZ_BIN/octez-evm-node init from rollup node ${ROLLUP_DATA_DIR} --data-dir ${EVM_DATA_DIR}
 fi
 
