@@ -11,7 +11,7 @@ if [ ! -e "${EVM_DATA_DIR}/store.sqlite" ]; then
 fi
 
 cat > "${EVM_CONFIG_FILE}" << EOF
-{ "rpc-addr": "0.0.0.0", "devmode": true, "cors_origins": [ "*" ],
+{ "rpc-addr": "0.0.0.0", "cors_origins": [ "*" ],
   "cors_headers": [ "*" ],
   "observer":
   { "preimages_endpoint":
