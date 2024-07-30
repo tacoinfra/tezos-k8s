@@ -9,13 +9,13 @@ EVM_CONFIG_FILE="${EVM_DATA_DIR}/config.json"
 # Wait till rollup node to be fully synchronized to run init from rollup command
 WAIT_LIMIT=30
 COUNTER=1
-while [ "$(curl -s http://localhost:8932/local/synchronized)" != "synchronized" ] && [ $COUNTER -lt $WAIT_LIMIT ]; do
+while [ "$(curl -s http://localhost:8932/local/synchronized | sed 's/^"//;s/"$//')" != "synchronized" ] && [ $COUNTER -lt $WAIT_LIMIT ]; do
   COUNTER=$((COUNTER + 1))
   echo "polling ${COUNTER}/${WAIT_LIMIT}: rollup node not synchronized yet"
   sleep 60
 done
 
-if [ "$(curl -s http://localhost:8932/local/synchronized)" != "synchronized" ]; then
+if [ "$(curl -s http://localhost:8932/local/synchronized | sed 's/^"//;s/"$//')" != "synchronized" ]; then
   echo "ERROR: rollup node not synchronized within wait limit, exiting...."
   exit 1
 fi
