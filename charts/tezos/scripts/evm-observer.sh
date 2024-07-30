@@ -10,6 +10,7 @@ EVM_CONFIG_FILE="${EVM_DATA_DIR}/config.json"
 WAIT_LIMIT=30
 COUNTER=1
 while [ "$(curl -s http://localhost:8932/local/synchronized)" != "synchronized" ] && [ $COUNTER -lt $WAIT_LIMIT ]; do
+  COUNTER=$((COUNTER + 1))
   echo "polling ${COUNTER}/${WAIT_LIMIT}: rollup node not synchronized yet"
   sleep 60
 done
