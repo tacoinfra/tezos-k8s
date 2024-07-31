@@ -44,7 +44,6 @@ EOF
 CMD="$TEZ_BIN/octez-evm-node run observer \
      --evm-node-endpoint ${EVM_NODE_ENDPOINT} \
      --rollup-node-endpoint http://127.0.0.1:8932 \
-     --cors-origins '*' --cors-headers '*' \
      --data-dir ${EVM_DATA_DIR} \
      --preimages-endpoint ${ROLLUP_PREIMAGES_ENDPOINT} \
      --rpc-addr 0.0.0.0 --rpc-port 8545"
