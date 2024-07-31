@@ -120,7 +120,7 @@ spec:
           - mountPath: /var/tezos
             name: var-volume
 {{- if $v.evm.config }}
-          - mountPath: /var/tezos/evm
+          - mountPath: /var/tezos/evm-config
             name: evm-config-volume
             subpathsubPath: config.json
 {{- end }}
