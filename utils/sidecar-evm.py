@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 from flask import Flask
-from web3 import Web3
 import requests
 import time
 import logging
@@ -9,23 +8,37 @@ log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
 
 application = Flask(__name__)
-web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
 
 AGE_LIMIT_IN_SECS = 600
 # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 # Default readiness probe timeoutSeconds is 1s, timeout sync request before that and return a
 # connect timeout error if necessary
+NODE_CONNECT_TIMEOUT = 0.9
 
 @application.route("/health")
 def health():
-    if not web3.is_connected():
-        err = ("Error: Failed to connect evm node. ", 500)
+    try:
+        payload = {
+            "jsonrpc": "2.0",
+            "method": "eth_getBlockByNumber",
+            "params": ["latest", False],
+            "id": 1
+        }
+        r = requests.get("http://127.0.0.1:8545", payload=payload, timeout=NODE_CONNECT_TIMEOUT)
+    except ConnectTimeout as e:
+        err = "Timeout connect to node, %s" % repr(e), 500
+        application.logger.error(err)
+        return err
+    except ReadTimeout as e:
+        err = "Timeout read from node, %s" % repr(e), 500
+        application.logger.error(err)
+        return err
+    except RequestException as e:
+        err = "Could not connect to node, %s" % repr(e), 500
         application.logger.error(err)
         return err
 
-    latest_block = web3.eth.get_block('latest')
-
-    latest_block_timestamp = latest_block['timestamp']
+    latest_block = r.json()['timestamp']
     current_timestamp = int(time.time())
     time_diff = current_timestamp - latest_block_timestamp
     if time_diff > AGE_LIMIT_IN_SECS:

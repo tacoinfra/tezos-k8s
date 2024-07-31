@@ -20,7 +20,6 @@ RUN     PIP_INST="pip --no-cache install"					\
   && $PIP_INST base58 pynacl					\
   && $PIP_INST mnemonic pytezos requests				\
   && $PIP_INST pyblake2 pysodium flask \
-  && $PIP_INST web3 \
   && apk del .build-deps \
   && $APK_ADD jq netcat-openbsd curl binutils \
   && $APK_ADD lz4
