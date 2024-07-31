@@ -18,7 +18,7 @@ node_globals:
     all:
       TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER: "Y"
 protocols:
-  - command: Proxford # replace with the most recent protocol
+  - command: PtParisC # replace with the most recent protocol
     vote:
       liquidity_baking_toggle_vote: pass
 accounts:
@@ -68,7 +68,7 @@ Configure a mainnet signer as follows:
 images:
   octez: tezos/tezos:octez-v20.2 # replace with most recent version
 protocols:
-  - command: Proxford # replace with the most recent protocol
+  - command: PsParisC # replace with the most recent protocol
     vote:
       liquidity_baking_toggle_vote: pass
 accounts:
