@@ -13,7 +13,18 @@ spec:
       name: evm-proxy
   selector:
     app: rollup-{{ $k }}
-{{ end }}
+{{- if $v.evm.config }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: evm-{{ $v.evm.mode }}-{{ $k }}-configmap
+  namespace: {{ $.Release.Namespace }}
+data:
+  config.json: |
+    {{ $v.evm.config | nindent 4 }}
+{{- end }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -108,6 +119,11 @@ spec:
         volumeMounts:
           - mountPath: /var/tezos
             name: var-volume
+{{- if $v.evm.config }}
+          - mountPath: /var/tezos/evm
+            name: evm-config-volume
+            subpathsubPath: config.json
+{{- end }}
         env:
           - name: MY_POD_NAME
             value: {{ $k }}
@@ -183,6 +199,11 @@ spec:
         - name: tezos-accounts
           secret:
             secretName: tezos-secret
+{{- if $v.evm.config }}
+        - name: evm-config-volume
+          configMap:
+            name: evm-{{ $v.evm.mode }}-{{ $k }}-configmap
+{{- end }}
   volumeClaimTemplates:
     - metadata:
         name: var-volume
