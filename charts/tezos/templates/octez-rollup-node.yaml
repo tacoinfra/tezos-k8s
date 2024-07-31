@@ -139,6 +139,14 @@ spec:
           {{- toYaml . | nindent 10 }}
 {{- end }}
 {{- end }}
+      - name: sidecar
+        image: "{{ $.Values.images.octez }}"
+        imagePullPolicy: {{ $.Values.images_pull_policy }}
+        args:
+          - sidecar-evm
+        env:
+          - name: MY_POD_NAME
+            value: {{ $k }}
 {{- end }}
       initContainers:
       - name: snapshot-downloader

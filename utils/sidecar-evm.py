@@ -24,7 +24,8 @@ def health():
             "params": ["latest", False],
             "id": 1
         }
-        r = requests.get("http://127.0.0.1:8545", payload=payload, timeout=NODE_CONNECT_TIMEOUT)
+        resp = requests.get("http://127.0.0.1:8545", payload=payload, timeout=NODE_CONNECT_TIMEOUT)
+        resp = resp.json()
     except ConnectTimeout as e:
         err = "Timeout connect to node, %s" % repr(e), 500
         application.logger.error(err)
@@ -38,7 +39,7 @@ def health():
         application.logger.error(err)
         return err
 
-    latest_block = r.json()['timestamp']
+    latest_block = resp['timestamp']
     current_timestamp = int(time.time())
     time_diff = current_timestamp - latest_block_timestamp
     if time_diff > AGE_LIMIT_IN_SECS:
