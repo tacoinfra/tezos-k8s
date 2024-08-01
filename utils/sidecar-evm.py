@@ -24,7 +24,7 @@ def health():
             "params": ["latest", False],
             "id": 1
         }
-        resp = requests.get("http://127.0.0.1:8545", payload=payload, timeout=NODE_CONNECT_TIMEOUT)
+        resp = requests.post("http://127.0.0.1:8545", json=payload, timeout=NODE_CONNECT_TIMEOUT)
         resp = resp.json()
     except ConnectTimeout as e:
         err = "Timeout connect to node, %s" % repr(e), 500

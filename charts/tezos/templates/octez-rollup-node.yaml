@@ -140,8 +140,8 @@ spec:
 {{- end }}
 {{- end }}
       - name: sidecar
-        image: "{{ $.Values.images.octez }}"
-        imagePullPolicy: {{ $.Values.images_pull_policy }}
+        image: "{{ $.Values.tezos_k8s_images.utils }}"
+        imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         args:
           - sidecar-evm
         env:
