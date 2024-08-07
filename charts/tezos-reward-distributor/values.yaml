@@ -109,6 +109,8 @@ trd_config:
 
 # slack token to be alerted when TRD fails
 slack_bot_token: "xoxb-xxxxxxxx"
+# slack channel to be alerted when TRD fails
+slack_channel: "tezos-alerts"
 
 # baker alias to push to slack webhook
 # baker_alias: "mybaker"

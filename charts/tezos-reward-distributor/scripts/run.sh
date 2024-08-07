@@ -29,12 +29,34 @@ if [ $? -ne 0 ]; then
     echo "TRD failed, but SLACK_BOT_TOKEN or SLACK_CHANNEL is not set, failing job"
     exit 1
   fi
-  curl -X POST -H 'Authorization: Bearer '${SLACK_BOT_TOKEN} -H 'Content-type: application/json' \
-    --data "{\"channel\":\"${SLACK_CHANNEL}\", \"text\":\"Payout failed for $BAKER_ALIAS\"}" \
-    https://slack.com/api/chat.postMessage | jq '.ok' | grep true
+  python -c "
+import os
+import requests
+import json
+
+slack_bot_token = os.getenv('SLACK_BOT_TOKEN')
+slack_channel = os.getenv('SLACK_CHANNEL')
+baker_alias = os.getenv('BAKER_ALIAS')
+
+response = requests.post(
+    'https://slack.com/api/chat.postMessage',
+    headers={
+        'Authorization': f'Bearer {slack_bot_token}',
+        'Content-Type': 'application/json; charset=utf-8'
+    },
+    data=json.dumps({
+        'channel': slack_channel,
+        'text': f'TRD Payout failed for Tezos baker {baker_alias}'
+    })
+)
+
+if not response.json().get('ok'):
+    print('Failed to send Slack alert')
+    print(response.json())
+    exit(1)
+"
   if [ $? -ne 0 ]; then
     echo "Failed to send Slack alert"
     exit 1
   fi
 fi
-

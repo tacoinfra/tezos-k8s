@@ -83,6 +83,8 @@ spec:
                 value: "{{ .Values.dry_run }}"
               - name: BAKER_ALIAS
                 value: "{{ .Values.baker_alias | default "unknown" }}"
+              - name: SLACK_CHANNEL
+                value: "{{ .Values.slack_channel | default "unknown" }}"
               - name: SLACK_BOT_TOKEN
                 valueFrom:
                   secretKeyRef:
