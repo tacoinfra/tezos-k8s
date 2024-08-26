@@ -171,11 +171,25 @@
       name: tezos-net
     - containerPort: 9932
       name: metrics
-    {{- if or (not (hasKey $.node_vals "bootstrapped_readiness_probe")) $.node_vals.bootstrapped_readiness_probe }}
+    {{- if or (not (hasKey $.node_vals "bootstrapped_probe")) $.node_vals.bootstrapped_probe }}
+  startupProbe:
+    httpGet:
+      path: /is_synced
+      port: 31732
+    failureThreshold: 180
+    periodSeconds: 10
   readinessProbe:
     httpGet:
       path: /is_synced
       port: 31732
+    successThreshold: 1
+    periodSeconds: 10
+  livenessProbe:
+    httpGet:
+      path: /is_synced
+      port: 31732
+    failureThreshold: 30
+    periodSeconds: 10
     {{- else if or (not (hasKey $.node_vals "rpc_readiness_probe")) $.node_vals.rpc_readiness_probe }}
   readinessProbe:
     httpGet:
@@ -259,7 +273,7 @@
 {{- end }}
 
 {{- define "tezos.container.sidecar" }}
-  {{- if or (not (hasKey $.node_vals "bootstrapped_readiness_probe")) $.node_vals.bootstrapped_readiness_probe }}
+  {{- if or (not (hasKey $.node_vals "bootstrapped_probe")) $.node_vals.bootstrapped_probe }}
     {{- $sidecarResources := dict "requests" (dict "memory" "80Mi") "limits" (dict "memory" "100Mi") -}}
     {{- include "tezos.generic_container" (dict "root"      $
                                                 "type"      "sidecar"
