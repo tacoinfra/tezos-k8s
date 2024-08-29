@@ -173,11 +173,11 @@
       name: metrics
     {{- if $.node_vals.bootstrapped_startup_probe }}
   startupProbe:
-    {{- toYaml $.Values.bootstrappedStartupProbe | indent 4 }}
+    {{- toYaml $.Values.bootstrappedStartupProbe | nindent 4 }}
     {{- end }}
     {{- if $.node_vals.bootstrapped_liveness_probe }}
   livenessProbe:
-    {{- toYaml $.Values.bootstrappedLivenessProbe | indent 4 }}
+    {{- toYaml $.Values.bootstrappedLivenessProbe | nindent 4 }}
     {{- end  }}
     {{- if or (not (hasKey $.node_vals "bootstrapped_readiness_probe")) $.node_vals.bootstrapped_readiness_probe }}
   readinessProbe:
