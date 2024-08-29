@@ -277,7 +277,7 @@
 {{- end }}
 
 {{- define "tezos.container.sidecar" }}
-  {{- if or (not (hasKey $.node_vals "bootstrapped_probe")) $.node_vals.bootstrapped_probe }}
+  {{- if or (not (hasKey $.node_vals "bootstrapped_readiness_probe")) $.node_vals.bootstrapped_readiness_probe }}
     {{- $sidecarResources := dict "requests" (dict "memory" "80Mi") "limits" (dict "memory" "100Mi") -}}
     {{- include "tezos.generic_container" (dict "root"      $
                                                 "type"      "sidecar"
