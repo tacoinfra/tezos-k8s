@@ -258,9 +258,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /is_synced
-              port: 31732
-            successThreshold: 1
-            periodSeconds: 10                        
+              port: 31732                        
         - name: logger
           image: "ghcr.io/tacoinfra/tezos-k8s-utils:main"
           imagePullPolicy: IfNotPresent
@@ -642,8 +640,6 @@ spec:
             httpGet:
               path: /is_synced
               port: 31732
-            successThreshold: 1
-            periodSeconds: 10
           resources:
             limits:
               memory: 16192Mi

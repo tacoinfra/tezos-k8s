@@ -192,8 +192,6 @@
     httpGet:
       path: /is_synced
       port: 31732
-    successThreshold: 1
-    periodSeconds: 10
     {{- else if or (not (hasKey $.node_vals "rpc_readiness_probe")) $.node_vals.rpc_readiness_probe }}
   readinessProbe:
     httpGet:
