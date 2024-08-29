@@ -153,15 +153,21 @@ accounts: {}
 # - `rpc_readiness_probe`: Attach a probe to the node. The probe checks whether
 #                          the RPC service is responsive, which should always be the
 #                          case. Defaults to true.
-# - `bootstrapped_probe`: Adds startup/readiness/liveness probe to check checks
-#                         whether the most recent block is less than 600 seconds old.
-#                         Overrides `rpc_readiness_probe`. Defaults to True.
-#                         True is good for RPC nodes, private nodes, and
-#                         self-contained private chains.
-#                         Recommended to set to False when bootstrapping a new
-#                         chain with external bakers, such as a new test chain.
-#                         Otherwise, the chain may become unreachable externally
-#                         while waiting for other nodes to come online.
+# - `bootstrapped_readiness_probe`: Checks whether the most recent block is less than
+#                                   600 seconds old.
+#                                   Overrides `rpc_readiness_probe`. Defaults to True.
+#                                   True is good for RPC nodes, private nodes, and
+#                                   self-contained private chains.
+#                                   Recommended to set to False when bootstrapping a new
+#                                   chain with external bakers, such as a new test chain.
+#                                   Otherwise, the chain may become unreachable externally
+#                                   while waiting for other nodes to come online.
+# - `bootstrapped_startup_probe`: Adds additional startup probe to check checks
+#                                 whether the most recent block is less than 600 seconds old.
+#                                 Defaults to False.
+# - `bootstrapped_liveness_probe`: Adds additional liveness probe to check checks
+#                                 whether the most recent block is less than 600 seconds old.
+#                                 Defaults to False.
 # - `instances`: A list of nodes to fire up, each is a dictionary defining:
 #    - `bake_using_accounts`: List of account names that should be used for baking.
 #    - `authorized_keys`: List of account names that should be used as keys to

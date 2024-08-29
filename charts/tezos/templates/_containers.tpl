@@ -171,24 +171,28 @@
       name: tezos-net
     - containerPort: 9932
       name: metrics
-    {{- if or (not (hasKey $.node_vals "bootstrapped_probe")) $.node_vals.bootstrapped_probe }}
+    {{- if $.node_vals.bootstrapped_startup_probe }}
   startupProbe:
     httpGet:
       path: /is_synced
       port: 31732
     failureThreshold: 180
     periodSeconds: 10
-  readinessProbe:
-    httpGet:
-      path: /is_synced
-      port: 31732
-    successThreshold: 1
-    periodSeconds: 10
+    {{- end }}
+    {{- if $.node_vals.bootstrapped_liveness_probe }}
   livenessProbe:
     httpGet:
       path: /is_synced
       port: 31732
     failureThreshold: 30
+    periodSeconds: 10
+    {{- end  }}
+    {{- if or (not (hasKey $.node_vals "bootstrapped_readiness_probe")) $.node_vals.bootstrapped_readiness_probe }}
+  readinessProbe:
+    httpGet:
+      path: /is_synced
+      port: 31732
+    successThreshold: 1
     periodSeconds: 10
     {{- else if or (not (hasKey $.node_vals "rpc_readiness_probe")) $.node_vals.rpc_readiness_probe }}
   readinessProbe:
