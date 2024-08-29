@@ -574,23 +574,11 @@ spec:
               name: tezos-net
             - containerPort: 9932
               name: metrics
-          startupProbe:
-            httpGet:
-              path: /is_synced
-              port: 31732
-            failureThreshold: 180
-            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /is_synced
               port: 31732
             successThreshold: 1
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /is_synced
-              port: 31732
-            failureThreshold: 30
             periodSeconds: 10                                
         - name: sidecar
           image: "ghcr.io/tacoinfra/tezos-k8s-utils:main"
@@ -785,23 +773,11 @@ spec:
               name: tezos-net
             - containerPort: 9932
               name: metrics
-          startupProbe:
-            httpGet:
-              path: /is_synced
-              port: 31732
-            failureThreshold: 180
-            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /is_synced
               port: 31732
             successThreshold: 1
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /is_synced
-              port: 31732
-            failureThreshold: 30
             periodSeconds: 10                
             
         - name: baker-0-013-ptjakart
@@ -1432,23 +1408,11 @@ spec:
               name: tezos-net
             - containerPort: 9932
               name: metrics
-          startupProbe:
-            httpGet:
-              path: /is_synced
-              port: 31732
-            failureThreshold: 180
-            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /is_synced
               port: 31732
             successThreshold: 1
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /is_synced
-              port: 31732
-            failureThreshold: 30
             periodSeconds: 10                
                             
         - name: sidecar
