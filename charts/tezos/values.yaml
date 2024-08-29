@@ -268,6 +268,21 @@ nodes:
             history_mode: rolling
           metrics_addr: ["0.0.0.0:9932"]
 # End nodes
+# default startup probe for bootstrapped nodes
+bootstrappedStartupProbe:
+  httpGet:
+    path: /is_synced
+    port: 31732
+  failureThreshold: 180
+  periodSeconds: 10
+
+# default liveness probe for nodes
+bootstrappedLivenessProbe:
+  httpGet:
+    path: /is_synced
+    port: 31732
+  failureThreshold: 30
+  periodSeconds: 10
 
 # Bakers
 # This deploys "remote bakers" that only bake through RPC.
