@@ -162,6 +162,12 @@ accounts: {}
 #                                   chain with external bakers, such as a new test chain.
 #                                   Otherwise, the chain may become unreachable externally
 #                                   while waiting for other nodes to come online.
+# - `bootstrapped_startup_probe`: Adds additional startup probe to check checks
+#                                 whether the most recent block is less than 600 seconds old.
+#                                 Defaults to False.
+# - `bootstrapped_liveness_probe`: Adds additional liveness probe to check checks
+#                                 whether the most recent block is less than 600 seconds old.
+#                                 Defaults to False.
 # - `instances`: A list of nodes to fire up, each is a dictionary defining:
 #    - `bake_using_accounts`: List of account names that should be used for baking.
 #    - `authorized_keys`: List of account names that should be used as keys to
@@ -262,6 +268,21 @@ nodes:
             history_mode: rolling
           metrics_addr: ["0.0.0.0:9932"]
 # End nodes
+# default startup probe for bootstrapped nodes
+bootstrappedStartupProbe:
+  httpGet:
+    path: /is_synced
+    port: 31732
+  failureThreshold: 180
+  periodSeconds: 10
+
+# default liveness probe for nodes
+bootstrappedLivenessProbe:
+  httpGet:
+    path: /is_synced
+    port: 31732
+  failureThreshold: 30
+  periodSeconds: 10
 
 # Bakers
 # This deploys "remote bakers" that only bake through RPC.

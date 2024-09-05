@@ -171,6 +171,14 @@
       name: tezos-net
     - containerPort: 9932
       name: metrics
+    {{- if $.node_vals.bootstrapped_startup_probe }}
+  startupProbe:
+    {{- toYaml $.Values.bootstrappedStartupProbe | nindent 4 }}
+    {{- end }}
+    {{- if $.node_vals.bootstrapped_liveness_probe }}
+  livenessProbe:
+    {{- toYaml $.Values.bootstrappedLivenessProbe | nindent 4 }}
+    {{- end  }}
     {{- if or (not (hasKey $.node_vals "bootstrapped_readiness_probe")) $.node_vals.bootstrapped_readiness_probe }}
   readinessProbe:
     httpGet:

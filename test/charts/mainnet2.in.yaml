@@ -29,6 +29,8 @@ nodes:
           history_mode:
             rolling:
               additional_cycles: 5
+    bootstrapped_startup_probe: true
+    bootstrapped_liveness_probe: true
   city-block:
     runs: [tezedge_node, logger, metrics]
     instances:

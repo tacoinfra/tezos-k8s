@@ -65,6 +65,8 @@ data:
         ]
       },
       "country-town": {
+        "bootstrapped_liveness_probe": true,
+        "bootstrapped_startup_probe": true,
         "env": {
           "all": {
             "key": "specific-pod"
@@ -622,6 +624,18 @@ spec:
               name: tezos-net
             - containerPort: 9932
               name: metrics
+          startupProbe:
+            failureThreshold: 180
+            httpGet:
+              path: /is_synced
+              port: 31732
+            periodSeconds: 10
+          livenessProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /is_synced
+              port: 31732
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /is_synced
