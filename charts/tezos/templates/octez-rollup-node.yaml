@@ -149,7 +149,7 @@ spec:
             value: {{ $k }}
 {{- end }}
       initContainers:
-      - name: snapshot-downloader
+      - name: octez-smartrollup-snapshot-downloader
         image: "{{ $.Values.tezos_k8s_images.utils }}"
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         command:
@@ -164,7 +164,7 @@ spec:
         env:
           - name: SNAPSHOT_URL
             value: {{ $v.snapshot_url }}
-      - name: snapshot-importer
+      - name: octez-smartrollup-snapshot-importer
         image: "{{ $.Values.images.octez }}"
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         command:
@@ -179,6 +179,35 @@ spec:
         env:
           - name: NODE_RPC_URL
             value: {{ $v.node_rpc_url }}
+{{- if $v.evm.snapshot.enabled }}
+      - name: evm-snapshot-downloader
+        image: "{{ $.Values.tezos_k8s_images.utils }}"
+        imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
+        command:
+          - /bin/sh
+        volumeMounts:
+          - mountPath: /var/tezos
+            name: var-volume
+        args:
+          - "-c"
+          - |
+{{ tpl ($.Files.Get "scripts/evm-snapshot-downloader.sh") $ | indent 12 }}
+        env:
+          - name: EVM_SNAPSHOT_URL
+            value: {{ $v.evm.snapshot.url }}
+      - name: evm-snapshot-importer
+        image: "{{ $.Values.images.octez }}"
+        imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
+        command:
+          - /bin/sh
+        volumeMounts:
+          - mountPath: /var/tezos
+            name: var-volume
+        args:
+          - "-c"
+          - |
+{{ tpl ($.Files.Get "scripts/evm-snapshot-importer.sh") $ | indent 12 }}
+{{- end }}
       - image: {{ $.Values.tezos_k8s_images.utils }}
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         name: config-generator
