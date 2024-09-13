@@ -20,4 +20,4 @@ echo "Downloading ${EVM_SNAPSHOT_URL}"
 mkdir -p "${EVM_DATA_DIR}"
 curl -LfsS ${EVM_SNAPSHOT_URL} | tee >(sha256sum > ${SNAPSHOT_FILE}.sha256sum) > "${SNAPSHOT_FILE}"
 
-chown -R 1000:1000 "${EVM_SNAPSHOT_URL}"
+chown -R 1000:1000 "${EVM_DATA_DIR}"
