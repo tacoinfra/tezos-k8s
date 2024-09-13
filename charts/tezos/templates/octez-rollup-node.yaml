@@ -196,7 +196,7 @@ spec:
           - name: EVM_SNAPSHOT_URL
             value: {{ $v.evm.snapshot.url }}
       - name: evm-snapshot-importer
-        image: "{{ $.Values.images.octez }}"
+        image: "{{ $v.evm.image.name | default $.Values.images.octez }}"
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
         command:
           - /bin/sh
