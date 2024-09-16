@@ -14,7 +14,7 @@ $TEZ_BIN/octez-smart-rollup-node init observer \
   --force
 
 CMD="$TEZ_BIN/octez-smart-rollup-node \
-  --endpoint http://tezos-node-rpc:8732 \
+  --endpoint ${NODE_RPC_URL} \
     run \
     --data-dir ${ROLLUP_DATA_DIR} \
     --acl-override allow-all \
