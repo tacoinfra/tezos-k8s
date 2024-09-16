@@ -93,6 +93,8 @@ spec:
               {{- $cleanKey := regexReplaceAll "[0-9]+$" $key "" }}
               {{ $cleanKey }}:{{ $value }}
               {{- end }}
+          - name: NODE_RPC_URL
+            value: {{ $v.node_rpc_url }}
 {{- if $v.resources }}
 {{- with $v.resources }}
         resources:
