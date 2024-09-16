@@ -7,6 +7,7 @@ case "$CMD" in
 	config-generator)	exec /config-generator.sh	"$@"	;;
 	logger)			exec /logger.sh			"$@"	;;
 	sidecar)		exec /sidecar.py		"$@"	;;
+	sidecar-evm)		exec /sidecar-evm.py		"$@"	;;
 	snapshot-downloader)	exec /snapshot-downloader.sh	"$@"	;;
 	wait-for-dns)		exec /wait-for-dns.sh		"$@"	;;
 esac
