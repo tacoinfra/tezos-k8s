@@ -22,21 +22,31 @@ python src/main.py \
   ${EXTRA_TRD_ARGS} \
   ${dry_run_arg}
 
-# if TRD fails, send a slack alert
-if [ $? -ne 0 ]; then
+# if TRD fails or returns exit code 9, send a slack alert
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
   # check if bot token and channel are set
   if [ -z "${SLACK_BOT_TOKEN}" ] || [ -z "${SLACK_CHANNEL}" ]; then
     echo "TRD failed, but SLACK_BOT_TOKEN or SLACK_CHANNEL is not set, failing job"
     exit 1
   fi
-  python -c "
+  echo "TRD exited in error, exit code is ${exit_code}, maybe send slack alert"
+  EXIT_CODE=${exit_code} python -c "
 import os
+import sys
 import requests
 import json
 
 slack_bot_token = os.getenv('SLACK_BOT_TOKEN')
 slack_channel = os.getenv('SLACK_CHANNEL')
 baker_alias = os.getenv('BAKER_ALIAS')
+exit_code = os.getenv('EXIT_CODE')
+
+if exit_code == '9':
+    print(f'TRD returned exit code 9 (PROVIDER_BUSY) for Tezos baker {baker_alias}. Not alerting.')
+    sys.exit(0)
+else:
+    message = f'TRD Payout failed for Tezos baker {baker_alias}, exit code {exit_code}.'
 
 response = requests.post(
     'https://slack.com/api/chat.postMessage',
@@ -46,7 +56,7 @@ response = requests.post(
     },
     data=json.dumps({
         'channel': slack_channel,
-        'text': f'TRD Payout failed for Tezos baker {baker_alias}'
+        'text': message
     })
 )
 
