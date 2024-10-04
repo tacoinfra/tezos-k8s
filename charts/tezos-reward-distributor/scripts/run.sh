@@ -22,7 +22,9 @@ python src/main.py \
   ${EXTRA_TRD_ARGS} \
   ${dry_run_arg}
 
-# if TRD fails or returns exit code 9, send a slack alert
+# if TRD fails, send a slack alert
+# Some exit codes are excluded. List of exit codes:
+# https://github.com/tezos-reward-distributor-organization/tezos-reward-distributor/blob/cdf7d3884bdf880c5e13267c6d6ad3af470b2e4e/src/util/exit_program.py#L6
 exit_code=$?
 if [ $exit_code -ne 0 ]; then
   # check if bot token and channel are set
