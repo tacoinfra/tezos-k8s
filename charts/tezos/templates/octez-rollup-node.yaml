@@ -95,6 +95,8 @@ spec:
               {{- end }}
           - name: NODE_RPC_URL
             value: {{ $v.node_rpc_url }}
+          - name: ROLLUP_HISTORY_MODE
+            value: {{ $v.history_mode }}
 {{- if $v.resources }}
 {{- with $v.resources }}
         resources:

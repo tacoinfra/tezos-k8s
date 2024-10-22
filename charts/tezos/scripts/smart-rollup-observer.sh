@@ -7,7 +7,7 @@ ROLLUP_DATA_DIR="${TEZ_VAR}/rollup"
 $TEZ_BIN/octez-smart-rollup-node init observer \
   config for "${ROLLUP_ADDRESS}" \
   with operators \
-  --history-mode archive \
+  --history-mode "${ROLLUP_HISTORY_MODE}" \
   --data-dir "${ROLLUP_DATA_DIR}" \
   --rpc-addr 0.0.0.0 \
   --pre-images-endpoint "${ROLLUP_PREIMAGES_ENDPOINT}" \
