@@ -11,7 +11,7 @@ if [ ! -d "$data_dir" ]; then
   exit 1
 fi
 
-if [ -e "$rollup_data_dir/storage/l2_blocks/data" ]; then
+if [ -e "$rollup_data_dir/store.sqlite" ]; then
   echo "Smart rollup snapshot has already been imported. Exiting."
   exit 0
 fi
