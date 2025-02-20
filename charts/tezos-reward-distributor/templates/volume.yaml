@@ -3,7 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ include "tezos-reward-distributor.fullname" . }}-volume
 spec:
- storageClassName:
+ {{- if .Values.storageClassName }}
+ storageClassName: {{ .Values.storageClassName }}
+ {{- end }}
  accessModes:
     - ReadWriteOnce
  resources:
