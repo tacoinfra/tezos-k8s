@@ -448,7 +448,7 @@ dalNodes: {}
 #       proof_of_work_stamp:
 #  dal1:
 #    storageSize: 50Gi
-#    attesterProfiles: tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE
+#    attest_using_accounts: [ 'baker0' ]
 
 # When spinning up nodes, tezos-k8s will attempt to download a snapshot from a
 # known source. This should be a url to a json metadata file in the format
