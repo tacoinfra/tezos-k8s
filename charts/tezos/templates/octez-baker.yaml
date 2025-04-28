@@ -88,6 +88,9 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
+        {{- if $v.storageClassName }}
+        storageClassName: {{ $v.storageClassName }}
+        {{- end }}
         resources:
           requests:
             storage: "1Gi"

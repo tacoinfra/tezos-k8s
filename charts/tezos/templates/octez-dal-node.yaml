@@ -112,6 +112,9 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
+        {{- if $v.storageClassName }}
+        storageClassName: {{ $v.storageClassName }}
+        {{- end }}
         resources:
           requests:
 {{- if $v.storageSize | default false }}
