@@ -12,6 +12,7 @@ node_modules
 .devspace/
 build
 
+.idea
 
 # Ignore mkchain generated files
 *_values.yaml
