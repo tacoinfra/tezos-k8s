@@ -22,9 +22,9 @@ if [ "${PUBLIC_ADDR}" != "" ]; then
 fi
 # populate identity, if provided
 if [ -n "$IDENTITY_JSON" ]; then
-    identity_path=/var/tezos/dal/identity.json
-    printf "Found persistent identity, writing to $identity_path"
-    echo "$IDENTITY_JSON" >  $identity_path
+  identity_path=/var/tezos/dal/identity.json
+  printf "Found persistent identity, writing to $identity_path"
+  echo "$IDENTITY_JSON" >$identity_path
 fi
 #
 

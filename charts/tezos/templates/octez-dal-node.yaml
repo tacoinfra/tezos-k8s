@@ -36,6 +36,10 @@ spec:
       labels:
         app: dal-{{ $k }}
     spec:
+{{- if $v.node_selector | default false }}
+      nodeSelector:
+{{ toYaml $v.node_selector | indent 8 }}
+{{- end }}
       initContainers:
       - image: {{ $.Values.tezos_k8s_images.utils }}
         imagePullPolicy: {{ $.Values.tezos_k8s_images_pull_policy }}
@@ -95,6 +99,10 @@ spec:
         - name: PUBLIC_ADDR
           value: "{{ $v.publicAddr }}"
 {{- end }}
+{{- if $v.flexible_ip | default false }}
+        - name: PUBLIC_ADDR
+          value: "{{ $v.flexible_ip }}"
+{{- end }}
 {{- if $v.identity | default false }}
         - name: IDENTITY_JSON
           value: {{ toJson $v.identity | quote }}
@@ -112,6 +120,9 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
+        {{- if $v.storageClassName }}
+        storageClassName: {{ $v.storageClassName }}
+        {{- end }}
         resources:
           requests:
 {{- if $v.storageSize | default false }}
