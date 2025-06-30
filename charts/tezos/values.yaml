@@ -393,6 +393,7 @@ smartRollupNodes: {}
 # ```
 # smartRollupNodes:
 #   rollup-node-0:
+#     mode: operator
 #     operators:
 #       operating: archive-baking-node-0
 #       cementing: archive-baking-node-0
@@ -402,6 +403,9 @@ smartRollupNodes: {}
 #       batching3: batcher3-account
 #       batching4: batcher4-account
 #     rollup_address: sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf
+#     snapshot_url: https://snapshots.us.tzinit.org/etherlink-ghostnet/eth-ghostnet.snapshot
+#     node_rpc_url: http://rolling-node-0.rolling-node:8732
+#     preimages_endpoint: https://snapshots.eu.tzinit.org/etherlink-mainnet/wasm_2_0_0
 #     annotations: {}
 #     ingress:
 #       enabled: false
@@ -411,7 +415,45 @@ smartRollupNodes: {}
 #       labels: {}
 #       pathType: Prefix
 #       tls: []
-#     evm_proxy:
+#     evm:
+#       mode: observer
+#       image:
+#         name: tezos/tezos:master
+#         pullPolicy: IfNotPresent
+#       annotations: {}
+#       ingress:
+#         enabled: false
+#         host: ""
+#         annotations: {}
+#         className: ""
+#         labels: {}
+#         pathType: Prefix
+#         tls: []
+#   rollup-node-1:
+#     mode: observer
+#     rollup_address: sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf
+#     preimages_endpoint: https://snapshots.eu.tzinit.org/etherlink-mainnet/wasm_2_0_0
+#     config: |
+#      { "smart-rollup-address": "sr1RYurGZtN8KNSpkMcCt9CgWeUaNkzsAfXf",
+#        "smart-rollup-node-operator": {}, "rpc-addr": "0.0.0.0",
+#        "fee-parameters": {}, "mode": "observer",
+#        "pre-images-endpoint":
+#        "https://snapshots.eu.tzinit.org/etherlink-ghostnet/wasm_2_0_0",
+#        "history-mode": "archive" }
+#     annotations: {}
+#     ingress:
+#       enabled: false
+#       host: ""
+#       annotations: {}
+#       className: ""
+#       labels: {}
+#       pathType: Prefix
+#       tls: []
+#     evm:
+#       mode: observer
+#       image:
+#         name: tezos/tezos:master
+#         pullPolicy: IfNotPresent
 #       annotations: {}
 #       ingress:
 #         enabled: false
