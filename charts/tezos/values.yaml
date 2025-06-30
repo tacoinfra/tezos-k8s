@@ -666,57 +666,6 @@ protocols:
 #       kernel: ""
 #       parameters_ty:
 #         prim: unit
-#
-## Deploy an indexer with the chain. An indexer puts the chain
-## contents in a database for efficient indexing. Most dapps need it.
-## Supported indexers:
-## * tzkt: https://github.com/baking-bad/tzkt
-## * bcd: https://github.com/baking-bad/bcdhub
-## Templatized indexer configuration values go in the config field.
-##
-# indexers:
-#   tzkt:
-#     images:
-#       api: "bakingbad/tzkt-api:1.12.0"
-#       indexer: "bakingbad/tzkt-sync:1.12.0"
-#       postgres: "postgres:13"
-#
-#     ## Database volumeClaimTemplates config
-#     storageClassName: ""
-#     storage: "100Gi"
-#     ## Statefulset annotations
-#     # annotations:
-#
-#     ## Indexer replicas
-#     replicas: 1
-#
-#     db:
-#       # By default creates a postgres db container. Setting to true won't create
-#       # it and instead expects credentials for an external postgres database.
-#       isExternal: false
-#       ## Tzkt provides new snapshots as they update their code. Update your
-#       ## indexers by specifying new docker image tags and by using the matching
-#       ## snapshot_url. Spin up an additional replica if you only have one to
-#       ## avoid downtime. See tzkt's readme for public networks' db snapshot urls.
-#       ## If you want to index a brand new archive node you are spinning up, just
-#       ## let the indexer start syncing with it from scratch.
-#       ## https://github.com/baking-bad/tzkt
-#       snapshot_url: https://snapshots.tzkt.io/tzkt_v1.12_mainnet.backup
-#       host: localhost
-#       port: 5432
-#       name: db
-#       user: foo
-#       password: bar
-#       command_timeout: 600
-#
-#     ## Configurable tzkt fields
-#     config:
-#       ## RPC url of the node to index. A rolling node is sufficient if the
-#       ## indexer is bootstrapped from the most recent snapshot. Otherwise an
-#       ## archive node is needed.
-#       rpc_url: http://rolling-node-0.rolling-node:8732
-#       # api_log_level: Debug
-#       # indexer_log_level: Debug
 
 ## Set values `indexerRpcUrl` and `db.password` for an indexer to be created.
 bcdIndexer:
