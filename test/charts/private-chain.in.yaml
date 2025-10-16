@@ -127,7 +127,5 @@ tacoinfraSigners:
     accounts:
       - tacoinfraSigner
 
-protocols:
-  - command: 013-PtJakart
-    vote:
-      liquidity_baking_toggle_vote: "pass"
+votes:
+  liquidity_baking_toggle_vote: "pass"
