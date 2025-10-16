@@ -99,10 +99,6 @@ spec:
         - name: PUBLIC_ADDR
           value: "{{ $v.publicAddr }}"
 {{- end }}
-{{- if $v.flexible_ip | default false }}
-        - name: PUBLIC_ADDR
-          value: "{{ $v.flexible_ip }}"
-{{- end }}
 {{- if $v.identity | default false }}
         - name: IDENTITY_JSON
           value: {{ toJson $v.identity | quote }}
