@@ -39,8 +39,7 @@ spec:
       containers:
 {{- $baker_name := index $v.bake_using_accounts 0 }}
 {{- $account := get $.Values.accounts $baker_name | default dict }}
-{{- range ( $account.protocols | default $.Values.protocols ) }}
-      - name: octez-baker-{{ lower .command  }}
+      - name: octez-baker
         image: "{{ $.Values.images.octez }}"
         imagePullPolicy: {{ $.Values.images_pull_policy }}
         volumeMounts:
@@ -57,8 +56,6 @@ spec:
         env:
         - name: NODE_RPC_URL
           value: "{{ $v.node_rpc_url }}"
-        - name: PROTO_COMMAND
-          value: "{{ .command }}"
         - name: BAKER_NAME
           value: {{ $baker_name }}
         - name: BAKE_USING_ACCOUNTS
@@ -70,7 +67,6 @@ spec:
 {{- if $v.dal_node_rpc_url | default false }}
         - name: DAL_NODE_RPC_URL
           value: "{{ $v.dal_node_rpc_url }}"
-{{- end }}
 {{- end }}
       securityContext:
         fsGroup: 1000

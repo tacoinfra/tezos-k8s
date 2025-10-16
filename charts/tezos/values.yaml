@@ -36,15 +36,12 @@ accounts: {}
 #
 # `accounts` is a map where keys are account aliases and values are maps of
 # fields `key`, `is_bootstrap_baker_account`, `bootstrap_balance`, `signer_url`
-# `protocols` and `operations_pool`.
+# and `operations_pool`.
 #
 # The `key` field can be set to a public or private key. For a bootstrap baker,
 # it must be set to a private key. The key type will be recognized automatically,
 # and the pod will fail if the key type is unexpected.
 #
-# The `protocols` fields overrides the top-level `protocols` field described
-# below and has the same syntax. This allows to set specific per-block votes per
-# baker.
 #
 # The `operations_pool` field instructs the baker to target a url for external
 # mempool queries when baking a block. This is useful to run a Flashbake-capable baker.
@@ -71,10 +68,6 @@ accounts: {}
 #   baker1:
 #     key: edsk...
 #     operations_pool: http://flashbake-endpoint-baker-listener:12732
-#     protocols:
-#     - command: PtMumbai
-#       vote:
-#         liquidity_baking_toggle_vote: "on"
 # ```
 # A public key account can contain a `signer_url` to a remote signer
 # that signs with the corresponding secret key. You don't need to
@@ -289,7 +282,6 @@ bootstrappedLivenessProbe:
 # Since octez 17.0, it is possible to bake with RPC only.
 # This is an alternative to defining bakers inside the node pods,
 # as above.
-# Experimental - do not use in production yet.
 bakers: {}
   # baker0:
   #   bake_using_accounts: [baker0]
@@ -512,25 +504,14 @@ expected_proof_of_work: 26
 node_config_network:
   chain_name: mainnet
 
-protocols:
-  ## Tezos builds baker binaries for every supported protocol.
-  ## List here the protocols that you wish to run bakers for.
-  ## These binaries must be present in the docker image specified.
-  ## You may want to run two or more if you are expecting an on-chain upgrade.
-  ## Be mindful that running more protocols will start more containers in your
-  ## pods which may consume more memory.
-  ## Syntax:
-  ## * command: the suffix of the tezos-baker binary
-  ## * vote: a map of per-block votes. These are protocol specific.
-  ##   "on" and "off" must be between quotes.
+votes:
+  ## Per-block votes for the baker. These are protocol specific.
+  ## "on" and "off" must be between quotes.
   ## Note that we are not providing default votes since every baker needs
   ## to make an explicit educated choice on every toggle.
-  - command: PsParisC
-    vote: {}
-  # - command: alpha
-  #   vote:
-  #     liquidity_baking_toggle_vote: "pass"
-  #     adaptive_issuance_vote: "pass"
+  ## Example:
+  # liquidity_baking_toggle_vote: "pass"
+  # adaptive_issuance_vote: "pass"
 
 ## Activate a new chain from genesis. Uncommenting this will create an
 ## activation job. The activation job will activate the chain if the

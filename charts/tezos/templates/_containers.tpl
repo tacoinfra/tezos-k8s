@@ -296,21 +296,15 @@
       {{- $max_baker_num = max (len (get $i "bake_using_accounts")) $max_baker_num }}
     {{- end }}
     {{- range $n := until (int $max_baker_num) }}
-      {{- range $.Values.protocols }}
-        {{- if (not .vote) }}
-          {{ fail (print "You did not specify the liquidity baking toggle vote in 'protocols' for protocol " .command ".") }}
-        {{- end -}}
-        {{- $_ := set $ "command_in_tpl" .command }}
-        {{- include "tezos.generic_container" (dict "root" $
-                                                    "name" (print "baker-"
-                                                            print $n
-                                                            print "-"
-                                                            (lower .command))
-                                                    "type"        "baker"
-                                                    "image"       "octez"
-                                                    "baker_index"   (print $n)
-        ) | nindent 0 }}
-      {{- end }}
+      {{- if (not $.Values.votes) }}
+        {{ fail (print "You did not specify per-block votes in 'votes' section.") }}
+      {{- end -}}
+      {{- include "tezos.generic_container" (dict "root" $
+                                                "name" (print "baker-" $n)
+                                                "type"        "baker"
+                                                "image"       "octez"
+                                                "baker_index"   (print $n)
+      ) | nindent 0 }}
     {{- end }}
   {{- end }}
 {{- end }}
@@ -319,31 +313,27 @@
 {{- define "tezos.container.accusers" }}
   {{- if has "accuser" $.node_vals.runs }}
   {{ $node_vals_images := $.node_vals.images | default dict }}
-    {{- range .Values.protocols }}
-- name: accuser-{{ lower .command }}
+- name: accuser
   image: "{{ or $node_vals_images.octez $.Values.images.octez }}"
   imagePullPolicy: {{ $.Values.images_pull_policy }}
   command:
-    - /usr/local/bin/octez-accuser-{{ .command }}
+    - /usr/local/bin/octez-accuser
   args:
     - run
-    {{- end }}
   {{- end }}
 {{- end }}
 
 {{- define "tezos.container.vdf" }}
   {{- if has "vdf" $.node_vals.runs }}
   {{ $node_vals_images := $.node_vals.images | default dict }}
-    {{- range .Values.protocols }}
-- name: vdf-{{ lower .command }}
+- name: vdf
   image: "{{ or $node_vals_images.octez $.Values.images.octez }}"
   imagePullPolicy: {{ $.Values.images_pull_policy }}
   command:
-    - /usr/local/bin/octez-baker-{{ .command }}
+    - /usr/local/bin/octez-baker
   args:
     - run
     - vdf
-    {{- end }}
   {{- end }}
 {{- end }}
 

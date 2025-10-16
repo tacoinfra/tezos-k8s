@@ -220,11 +220,16 @@ data:
 # Source: tezos-chain/templates/configs.yaml
 apiVersion: v1
 data:
-    tezos-baking-node-0-013-PtJakart-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
-    a-013-PtJakart-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
-    b-013-PtJakart-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
-    c-013-PtJakart-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
-    d-013-PtJakart-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+
+  tezos-baking-node-0-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+
+  a-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+
+  b-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+
+  c-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+
+  d-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
 kind: ConfigMap
 metadata:
   name: baker-config
@@ -776,7 +781,7 @@ spec:
               path: /is_synced
               port: 31732                
             
-        - name: baker-0-013-ptjakart
+        - name: baker-0
           image: "tezos/tezos:v15-release"
           imagePullPolicy: IfNotPresent
           command:
@@ -793,9 +798,7 @@ spec:
               NODE_DATA_DIR="$TEZ_VAR/node/data"
               BAKER_EXTRA_ARGS_FROM_ENV=${BAKER_EXTRA_ARGS}
               
-              proto_command="013-PtJakart"
-              
-              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" < /etc/tezos/baker-account )"
+              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" </etc/tezos/baker-account)"
               
               if [ "${my_baker_account}" == "" ]; then
                 while true; do
@@ -805,7 +808,7 @@ spec:
                 done
               fi
               
-              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-${proto_command}-per-block-votes.json
+              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-per-block-votes.json
               
               if [ ! -f "$per_block_vote_file" ]; then
                 echo "Error: $per_block_vote_file not found" >&2
@@ -813,12 +816,11 @@ spec:
               fi
               
               if [ "$(cat $per_block_vote_file)" == "null" ]; then
-                cat << EOF
+                cat <<EOF
               You must pass per-block-votes (such as liquidity_baking_toggle_vote) in values.yaml, for example:
-              protocols:
-              - command: ${proto_command}
-                vote:
-                  liquidity_baking_toggle_vote: "on"
+              votes:
+                liquidity_baking_toggle_vote: "on"
+                adaptive_issuance_vote: "pass"
               EOF
                 exit 1
               fi
@@ -830,16 +832,18 @@ spec:
               
               if [ -f /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url ]; then
                 extra_args="${extra_args} --dal-node $(cat /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url)"
+              else
+                extra_args="${extra_args} --without-dal"
               fi
               
               CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
-              CMD="$TEZ_BIN/octez-baker-$proto_command -d $CLIENT_DIR"
+              CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
               
               # ensure we can run octez-client commands without specifying client dir
               ln -s /var/tezos/client /home/tezos/.tezos-client
               
               while ! $CLIENT rpc get chains/main/blocks/head; do
-                  sleep 5
+                sleep 5
               done
               
               exec $CMD run with local node $NODE_DATA_DIR ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${my_baker_account}
@@ -857,7 +861,7 @@ spec:
               name: var-volume
             - mountPath: /etc/tezos/baker-config
               name: baker-config
-        - name: baker-1-013-ptjakart
+        - name: baker-1
           image: "tezos/tezos:v15-release"
           imagePullPolicy: IfNotPresent
           command:
@@ -874,9 +878,7 @@ spec:
               NODE_DATA_DIR="$TEZ_VAR/node/data"
               BAKER_EXTRA_ARGS_FROM_ENV=${BAKER_EXTRA_ARGS}
               
-              proto_command="013-PtJakart"
-              
-              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" < /etc/tezos/baker-account )"
+              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" </etc/tezos/baker-account)"
               
               if [ "${my_baker_account}" == "" ]; then
                 while true; do
@@ -886,7 +888,7 @@ spec:
                 done
               fi
               
-              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-${proto_command}-per-block-votes.json
+              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-per-block-votes.json
               
               if [ ! -f "$per_block_vote_file" ]; then
                 echo "Error: $per_block_vote_file not found" >&2
@@ -894,12 +896,11 @@ spec:
               fi
               
               if [ "$(cat $per_block_vote_file)" == "null" ]; then
-                cat << EOF
+                cat <<EOF
               You must pass per-block-votes (such as liquidity_baking_toggle_vote) in values.yaml, for example:
-              protocols:
-              - command: ${proto_command}
-                vote:
-                  liquidity_baking_toggle_vote: "on"
+              votes:
+                liquidity_baking_toggle_vote: "on"
+                adaptive_issuance_vote: "pass"
               EOF
                 exit 1
               fi
@@ -911,16 +912,18 @@ spec:
               
               if [ -f /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url ]; then
                 extra_args="${extra_args} --dal-node $(cat /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url)"
+              else
+                extra_args="${extra_args} --without-dal"
               fi
               
               CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
-              CMD="$TEZ_BIN/octez-baker-$proto_command -d $CLIENT_DIR"
+              CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
               
               # ensure we can run octez-client commands without specifying client dir
               ln -s /var/tezos/client /home/tezos/.tezos-client
               
               while ! $CLIENT rpc get chains/main/blocks/head; do
-                  sleep 5
+                sleep 5
               done
               
               exec $CMD run with local node $NODE_DATA_DIR ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${my_baker_account}
@@ -938,7 +941,7 @@ spec:
               name: var-volume
             - mountPath: /etc/tezos/baker-config
               name: baker-config
-        - name: baker-2-013-ptjakart
+        - name: baker-2
           image: "tezos/tezos:v15-release"
           imagePullPolicy: IfNotPresent
           command:
@@ -955,9 +958,7 @@ spec:
               NODE_DATA_DIR="$TEZ_VAR/node/data"
               BAKER_EXTRA_ARGS_FROM_ENV=${BAKER_EXTRA_ARGS}
               
-              proto_command="013-PtJakart"
-              
-              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" < /etc/tezos/baker-account )"
+              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" </etc/tezos/baker-account)"
               
               if [ "${my_baker_account}" == "" ]; then
                 while true; do
@@ -967,7 +968,7 @@ spec:
                 done
               fi
               
-              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-${proto_command}-per-block-votes.json
+              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-per-block-votes.json
               
               if [ ! -f "$per_block_vote_file" ]; then
                 echo "Error: $per_block_vote_file not found" >&2
@@ -975,12 +976,11 @@ spec:
               fi
               
               if [ "$(cat $per_block_vote_file)" == "null" ]; then
-                cat << EOF
+                cat <<EOF
               You must pass per-block-votes (such as liquidity_baking_toggle_vote) in values.yaml, for example:
-              protocols:
-              - command: ${proto_command}
-                vote:
-                  liquidity_baking_toggle_vote: "on"
+              votes:
+                liquidity_baking_toggle_vote: "on"
+                adaptive_issuance_vote: "pass"
               EOF
                 exit 1
               fi
@@ -992,16 +992,18 @@ spec:
               
               if [ -f /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url ]; then
                 extra_args="${extra_args} --dal-node $(cat /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url)"
+              else
+                extra_args="${extra_args} --without-dal"
               fi
               
               CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
-              CMD="$TEZ_BIN/octez-baker-$proto_command -d $CLIENT_DIR"
+              CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
               
               # ensure we can run octez-client commands without specifying client dir
               ln -s /var/tezos/client /home/tezos/.tezos-client
               
               while ! $CLIENT rpc get chains/main/blocks/head; do
-                  sleep 5
+                sleep 5
               done
               
               exec $CMD run with local node $NODE_DATA_DIR ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${my_baker_account}
@@ -1019,7 +1021,7 @@ spec:
               name: var-volume
             - mountPath: /etc/tezos/baker-config
               name: baker-config
-        - name: baker-3-013-ptjakart
+        - name: baker-3
           image: "tezos/tezos:v15-release"
           imagePullPolicy: IfNotPresent
           command:
@@ -1036,9 +1038,7 @@ spec:
               NODE_DATA_DIR="$TEZ_VAR/node/data"
               BAKER_EXTRA_ARGS_FROM_ENV=${BAKER_EXTRA_ARGS}
               
-              proto_command="013-PtJakart"
-              
-              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" < /etc/tezos/baker-account )"
+              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" </etc/tezos/baker-account)"
               
               if [ "${my_baker_account}" == "" ]; then
                 while true; do
@@ -1048,7 +1048,7 @@ spec:
                 done
               fi
               
-              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-${proto_command}-per-block-votes.json
+              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-per-block-votes.json
               
               if [ ! -f "$per_block_vote_file" ]; then
                 echo "Error: $per_block_vote_file not found" >&2
@@ -1056,12 +1056,11 @@ spec:
               fi
               
               if [ "$(cat $per_block_vote_file)" == "null" ]; then
-                cat << EOF
+                cat <<EOF
               You must pass per-block-votes (such as liquidity_baking_toggle_vote) in values.yaml, for example:
-              protocols:
-              - command: ${proto_command}
-                vote:
-                  liquidity_baking_toggle_vote: "on"
+              votes:
+                liquidity_baking_toggle_vote: "on"
+                adaptive_issuance_vote: "pass"
               EOF
                 exit 1
               fi
@@ -1073,16 +1072,18 @@ spec:
               
               if [ -f /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url ]; then
                 extra_args="${extra_args} --dal-node $(cat /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url)"
+              else
+                extra_args="${extra_args} --without-dal"
               fi
               
               CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
-              CMD="$TEZ_BIN/octez-baker-$proto_command -d $CLIENT_DIR"
+              CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
               
               # ensure we can run octez-client commands without specifying client dir
               ln -s /var/tezos/client /home/tezos/.tezos-client
               
               while ! $CLIENT rpc get chains/main/blocks/head; do
-                  sleep 5
+                sleep 5
               done
               
               exec $CMD run with local node $NODE_DATA_DIR ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${my_baker_account}
@@ -1100,7 +1101,7 @@ spec:
               name: var-volume
             - mountPath: /etc/tezos/baker-config
               name: baker-config
-        - name: baker-4-013-ptjakart
+        - name: baker-4
           image: "tezos/tezos:v15-release"
           imagePullPolicy: IfNotPresent
           command:
@@ -1117,9 +1118,7 @@ spec:
               NODE_DATA_DIR="$TEZ_VAR/node/data"
               BAKER_EXTRA_ARGS_FROM_ENV=${BAKER_EXTRA_ARGS}
               
-              proto_command="013-PtJakart"
-              
-              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" < /etc/tezos/baker-account )"
+              my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" </etc/tezos/baker-account)"
               
               if [ "${my_baker_account}" == "" ]; then
                 while true; do
@@ -1129,7 +1128,7 @@ spec:
                 done
               fi
               
-              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-${proto_command}-per-block-votes.json
+              per_block_vote_file=/etc/tezos/baker-config/${my_baker_account}-per-block-votes.json
               
               if [ ! -f "$per_block_vote_file" ]; then
                 echo "Error: $per_block_vote_file not found" >&2
@@ -1137,12 +1136,11 @@ spec:
               fi
               
               if [ "$(cat $per_block_vote_file)" == "null" ]; then
-                cat << EOF
+                cat <<EOF
               You must pass per-block-votes (such as liquidity_baking_toggle_vote) in values.yaml, for example:
-              protocols:
-              - command: ${proto_command}
-                vote:
-                  liquidity_baking_toggle_vote: "on"
+              votes:
+                liquidity_baking_toggle_vote: "on"
+                adaptive_issuance_vote: "pass"
               EOF
                 exit 1
               fi
@@ -1154,16 +1152,18 @@ spec:
               
               if [ -f /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url ]; then
                 extra_args="${extra_args} --dal-node $(cat /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url)"
+              else
+                extra_args="${extra_args} --without-dal"
               fi
               
               CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
-              CMD="$TEZ_BIN/octez-baker-$proto_command -d $CLIENT_DIR"
+              CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
               
               # ensure we can run octez-client commands without specifying client dir
               ln -s /var/tezos/client /home/tezos/.tezos-client
               
               while ! $CLIENT rpc get chains/main/blocks/head; do
-                  sleep 5
+                sleep 5
               done
               
               exec $CMD run with local node $NODE_DATA_DIR ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${my_baker_account}
