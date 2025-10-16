@@ -22,6 +22,8 @@ fi
 
 if [ "${DAL_NODE_RPC_URL}" != "" ]; then
   extra_args="${extra_args} --dal-node ${DAL_NODE_RPC_URL}"
+else
+  extra_args="${extra_args} --without-dal"
 fi
 
 CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
@@ -30,4 +32,4 @@ CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
 # ensure we can run octez-client commands without specifying client dir
 ln -s /var/tezos/client /home/tezos/.tezos-client
 
-exec $CMD --endpoint ${NODE_RPC_URL} run remotely  ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${BAKE_USING_ACCOUNTS}
+exec $CMD --endpoint ${NODE_RPC_URL} run remotely ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${BAKE_USING_ACCOUNTS}

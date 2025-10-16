@@ -7,7 +7,7 @@ NODE_DIR="$TEZ_VAR/node"
 NODE_DATA_DIR="$TEZ_VAR/node/data"
 BAKER_EXTRA_ARGS_FROM_ENV=${BAKER_EXTRA_ARGS}
 
-my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" < /etc/tezos/baker-account )"
+my_baker_account="$(sed -n "$(($BAKER_INDEX + 1))p" </etc/tezos/baker-account)"
 
 if [ "${my_baker_account}" == "" ]; then
   while true; do
@@ -25,7 +25,7 @@ if [ ! -f "$per_block_vote_file" ]; then
 fi
 
 if [ "$(cat $per_block_vote_file)" == "null" ]; then
-  cat << EOF
+  cat <<EOF
 You must pass per-block-votes (such as liquidity_baking_toggle_vote) in values.yaml, for example:
 votes:
   liquidity_baking_toggle_vote: "on"
@@ -41,6 +41,8 @@ fi
 
 if [ -f /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url ]; then
   extra_args="${extra_args} --dal-node $(cat /etc/tezos/baker-config/${my_baker_account}_dal_node_rpc_url)"
+else
+  extra_args="${extra_args} --without-dal"
 fi
 
 CLIENT="$TEZ_BIN/octez-client -d $CLIENT_DIR"
@@ -50,7 +52,7 @@ CMD="$TEZ_BIN/octez-baker -d $CLIENT_DIR"
 ln -s /var/tezos/client /home/tezos/.tezos-client
 
 while ! $CLIENT rpc get chains/main/blocks/head; do
-    sleep 5
+  sleep 5
 done
 
 exec $CMD run with local node $NODE_DATA_DIR ${extra_args} ${BAKER_EXTRA_ARGS_FROM_ENV} ${my_baker_account}
