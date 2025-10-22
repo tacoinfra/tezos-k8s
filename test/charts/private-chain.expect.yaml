@@ -221,15 +221,15 @@ data:
 apiVersion: v1
 data:
 
-  tezos-baking-node-0-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+    tezos-baking-node-0-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
 
-  a-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+    a-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
 
-  b-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+    b-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
 
-  c-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+    c-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
 
-  d-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
+    d-per-block-votes.json: "{\"liquidity_baking_toggle_vote\":\"pass\"}"
 kind: ConfigMap
 metadata:
   name: baker-config
