@@ -90,7 +90,7 @@ data:
     {{- fail (printf "Baking account '%s' is not defined." $account) }}
   {{- end }}
 
-  {{ $accountName }}-per-block-votes.json: {{ $.Values.votes | default dict | toJson | quote }}
+    {{ $accountName }}-per-block-votes.json: {{ $.Values.votes | default dict | toJson | quote }}
   {{- if $account.operations_pool }}
     {{ $accountName }}_operations_pool: {{ $account.operations_pool | quote }}
   {{- end }}
