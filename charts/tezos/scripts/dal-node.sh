@@ -11,7 +11,7 @@ if [ "${BOOTSTRAP_PROFILE}" == "true" ]; then
   extra_args="--bootstrap-profile"
 fi
 if [ -s "${TEZ_VAR}/dal_attester_config" ]; then
-  attester_config=$(cat "/var/tezos/dal_attester_config")
+  attester_config=$(cat "/var/tezos/dal_attester_config | sed -e 's/,$//g'")
   extra_args="${extra_args} --attester-profiles ${attester_config}"
 fi
 if [ "${PEER}" != "" ]; then
