@@ -34,16 +34,3 @@ spec:
     node_class: {{ $key }}
 ---
 {{- end }}
-{{- if (include "tezos.shouldDeployTzktIndexer" .) }}
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.tzkt_indexer_statefulset.name }}
-  namespace: {{ .Release.Namespace }}
-spec:
-  ports:
-    - port: 5000
-  selector:
-    app: {{ .Values.tzkt_indexer_statefulset.name }}
-  type: NodePort
-{{- end }}

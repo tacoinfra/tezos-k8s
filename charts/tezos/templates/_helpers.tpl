@@ -128,21 +128,6 @@ metadata:
 {{- end }}
 
 {{/*
-  Should deploy TZKT indexer?
-*/}}
-{{- define "tezos.shouldDeployTzktIndexer" -}}
-  {{- $indexers := .Values.indexers | default dict }}
-  {{- if $indexers.tzkt }}
-    {{- $tzkt_config := $indexers.tzkt.config | default dict }}
-    {{- if $tzkt_config.rpc_url }}
-      {{- "true" }}
-    {{- else }}
-      {{- "" }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-
-{{/*
   Checks if `bcdIndexer` has `rpcUrl` and `dbPassword` set.
   Returns the true type or empty string which is falsey.
 */}}

@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "tzkt.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tzkt.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.annotations | nindent 4 }}
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "tzkt.selectorLabels" . | nindent 6 }}
+  serviceName: ""
+  template:
+    metadata:
+      labels:
+        {{- include "tzkt.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - image: {{ .Values.tezos_k8s_images.utils }}
+          name: readiness
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              while :
+              do
+                [ "$(curl -s http://localhost:5000/v1/head | jq '.synced')" = true ] \
+                  && { touch /tmp/synced; echo "Synced"; } \
+                  || { echo "Indexer syncing..."; rm -f /tmp/synced; }
+                sleep 8s
+              done
+          {{- /*
+            initialDelaySeconds gives indexer time to boot up and grab chain data
+            before starting the probe. Also some blocks can take longer than others
+            to sync, such as when fetching baking/endorsing rights for a cycle.
+            So we set failureThreshold to 3. Tzkt has a bug where occasionally the
+            indexer sync status returns a false positive. Usually when the container
+            just starts. We set the successThreshold at 2 so we are more likely to
+            know if the indexer is actually synced.
+          */}}
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 2
+            exec:
+              command: ["cat", "/tmp/synced"]
+        - name: api
+          image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
+          imagePullPolicy: "{{ .Values.api.image.pullPolicy }}"
+          ports:
+            - containerPort: {{ .Values.api.port }}
+              name: http
+              protocol: TCP
+        {{- if .Values.api.appSettings }}
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: {{ include "tzkt.fullname" . }}-api-appsettings
+              subPath: appsettings.json
+        {{- end }}
+          env:
+            - name: Logging__LogLevel__Default
+              value: "{{ .Values.api.logLevel }}"
+            - name: ConnectionStrings__DefaultConnection
+              value: "{{- include "tzkt.connectionString" . }}"
+            - name: TZKT_API_KESTREL__ENDPOINTS__HTTP__URL
+              value: "{{- include "tzkt.apiUrl" . }}"
+          envFrom:
+            - configMapRef:
+                name: {{ include "tzkt.fullname" . }}-db
+            - secretRef:
+                name: {{ include "tzkt.fullname" . }}-db-creds
+        - name: indexer
+          image: {{ .Values.sync.image.repository }}:{{ .Values.sync.image.tag}}
+          imagePullPolicy: "{{ .Values.sync.image.pullPolicy }}"
+          volumeMounts:
+            - name: tzkt-env
+              mountPath: /etc/tzkt
+          {{- if .Values.sync.appSettings }}
+            - mountPath: /app/appsettings.json
+              name:  {{ include "tzkt.fullname" . }}-sync-appsettings
+              subPath: appsettings.json
+          {{- end }}
+          env:
+            - name: Logging__LogLevel__Default
+              value: "{{ .Values.sync.logLevel }}"
+            - name: TezosNode__Endpoint
+              value: "{{ .Values.sync.tezosNodeEndpoint }}"
+            - name: ConnectionStrings__DefaultConnection
+              value: "{{- include "tzkt.connectionString" . }}"
+          envFrom:
+            - configMapRef:
+                name: {{ include "tzkt.fullname" . }}-db
+            - secretRef:
+                name: {{ include "tzkt.fullname" . }}-db-creds
+      volumes:
+        - name: tzkt-env
+          emptyDir: {}
+      {{- if .Values.api.appSettings }}
+        - configMap:
+            name:  {{ include "tzkt.fullname" . }}-api-appsettings
+          name: {{ include "tzkt.fullname" . }}-api-appsettings
+      {{- end }}
+      {{- if .Values.sync.appSettings }}
+        - configMap:
+            name:  {{ include "tzkt.fullname" . }}-sync-appsettings
+          name: {{ include "tzkt.fullname" . }}-sync-appsettings
+      {{- end }}
