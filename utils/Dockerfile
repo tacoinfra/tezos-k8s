@@ -1,6 +1,4 @@
-FROM python:3.10-alpine
-# TODO: update to 3.11 once the bug is fixed:
-# https://github.com/baking-bad/pytezos/issues/336
+FROM python:3.12-alpine
 ENV PYTHONUNBUFFERED=1
 
 #
