@@ -1,6 +1,6 @@
 # Images not part of the tezos-k8s repo go here
 images:
-  octez: tezos/tezos:octez-v20.2
+  octez: tezos/tezos:octez-v22.1
   tacoinfraRemoteSigner: ghcr.io/tacoinfra/tacoinfra-remote-signer:0.1.0
 images_pull_policy: IfNotPresent
 # Images that are part of the tezos-k8s repo go here with 'dev' tag
@@ -331,7 +331,7 @@ serviceMonitor:
 # https://tezos.gitlab.io/user/key-management.html#signer
 octezSigners: {}
 # These signers use the octez-signer binary.
-# 
+#
 # Example:
 # ```
 # octezSigners:

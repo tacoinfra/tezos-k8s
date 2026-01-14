@@ -86,7 +86,7 @@ You can explicitly specify some values by:
 |                                  | --dal-nodes        | Number of DAL nodes in the cluster                      | 1                       |
 | bootstrap_peers                  | --bootstrap-peers        | Peer ips to connect to                                         | []                      |
 | expected_proof_of_work           | --expected-proof-of-work | Node identity generation difficulty                            | 0                       |
-| images.octez                     | --octez-docker-image     | Version of the Octez docker image to run                       | tezos/tezos:octez-v20.2 |
+| images.octez                     | --octez-docker-image     | Version of the Octez docker image to run                       | tezos/tezos:octez-v22.1 |
 |                                  | --use-docker (--no...)   | Use (or don't use) docker to generate keys rather than pytezos | autodetect              |
 
 ## Create Tezos Chain
